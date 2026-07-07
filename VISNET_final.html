@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISNET - AcabadosVIS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/tabler-icons.min.css">
+<style>
+/* RESET COMPLETO - fuerza colores correctos en cualquier navegador */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;-webkit-text-size-adjust:100%}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;background:#F4F4F4!important;color:#0D0D0D!important;min-height:100vh}
+input,select,textarea,button{color-scheme:light;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+
+:root{
+  --org:#f56e1d;--org-d:#d4550d;--org-l:#fff8f4;--org-b:#ffe0cc;
+  --blk:#0D0D0D;--wht:#FFFFFF;--bg:#F4F4F4;
+  --brd:#E8E8E8;--brd2:#F2F2F2;
+  --t1:#0D0D0D;--t2:#525252;--t3:#737373;--t4:#A3A3A3;
+  --sb:260px;--sbm:64px;--hh:60px;
+}
+
+/* Todos los inputs FORZADOS a blanco */
+input,select,textarea{
+  background:#FFFFFF!important;
+  color:#0D0D0D!important;
+  border:1.5px solid #E8E8E8!important;
+  -webkit-appearance:none;
+  appearance:none;
+}
+input::placeholder{color:#A3A3A3!important}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;
+  border-color:#f56e1d!important;
+  box-shadow:0 0 0 3px rgba(245,110,29,.13)!important;
+  background:#FFFFFF!important;
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A3A3A3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
+button{cursor:pointer;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ========== LOGIN ========== */
+#login{display:flex;min-height:100vh;background:#0D0D0D}
+.lb{width:50%;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(32px,5vh,56px) clamp(32px,5vw,56px);position:relative;overflow:hidden}
+.lb::before{content:'';position:absolute;top:-80px;right:-60px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(245,110,29,.07),transparent 70%);pointer-events:none}
+.lb-logo{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.lb-logo img{width:40px;height:40px;object-fit:contain;display:block}
+.lb-logo-name{color:#fff;font-weight:800;font-size:17px;line-height:1}
+.lb-logo-name span{color:#f56e1d}
+.lb-hero{position:relative;z-index:1}
+.lb-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:99px;background:rgba(245,110,29,.12);border:1px solid rgba(245,110,29,.25);margin-bottom:22px}
+.lb-badge .dot{width:6px;height:6px;border-radius:50%;background:#f56e1d;animation:pulse 2s infinite}
+.lb-badge span{color:#f56e1d;font-size:11px;font-weight:600}
+.lb-h1{color:#fff;font-weight:900;font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.08;margin-bottom:16px}
+.lb-h1 em{color:#f56e1d;font-style:normal}
+.lb-p{color:rgba(255,255,255,.45);font-size:15px;line-height:1.75;max-width:380px}
+.lb-p strong{color:rgba(255,255,255,.8);font-weight:600}
+.lb-stats{display:flex;gap:clamp(20px,3vw,36px);margin-top:32px}
+.lb-sv{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:900;color:#f56e1d;line-height:1}
+.lb-sl{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px}
+.lb-foot{font-size:11px;color:rgba(255,255,255,.2);position:relative;z-index:1}
+.lb-foot span{color:#f56e1d}
+
+.rf{flex:1;background:#F4F4F4;display:flex;align-items:center;justify-content:center;padding:40px 32px;min-height:100vh}
+.rc{width:100%;max-width:400px;animation:fadeIn .4s ease}
+.rbox{background:#FFFFFF;border-radius:20px;padding:34px;border:1px solid #E8E8E8;box-shadow:0 4px 32px rgba(0,0,0,.08)}
+.rbox h2{font-size:22px;font-weight:800;color:#0D0D0D;margin-bottom:5px}
+.rbox .sub{font-size:13px;color:#737373;margin-bottom:24px}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:12px;font-weight:600;color:#262626;margin-bottom:6px}
+.flr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.flr .fl{margin:0}
+.flink{font-size:11px;color:#A3A3A3;cursor:pointer}
+.iw{position:relative}
+.iw .ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#A3A3A3;font-size:15px;pointer-events:none;z-index:1}
+.vi{width:100%;padding:10px 12px 10px 36px;border-radius:8px;font-size:14px;transition:all .15s}
+.vi-pass{padding-right:40px}
+.eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none!important;box-shadow:none!important;color:#A3A3A3;cursor:pointer;padding:0;display:flex;align-items:center;font-size:15px}
+.eye:hover{color:#525252}
+.info-b{display:flex;gap:8px;align-items:flex-start;background:#fff8f4;border:1px solid #ffe0cc;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:11px;color:#737373}
+.info-b .ico-org{color:#f56e1d;font-size:14px;flex-shrink:0;margin-top:1px}
+.btn-in{width:100%;padding:12px;background:linear-gradient(135deg,#f56e1d,#e8a327);color:#fff!important;font-weight:700;font-size:15px;border:none!important;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s,transform .1s;box-shadow:0 4px 14px rgba(245,110,29,.35)}
+.btn-in:hover{opacity:.92}
+.btn-in:active{transform:scale(.98)}
+.btn-in:disabled{opacity:.65;cursor:not-allowed}
+.rfoot{text-align:center;font-size:11px;color:#A3A3A3;margin-top:16px}
+.rfoot strong{color:#737373;font-weight:600}
+.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+
+/* ========== DASHBOARD ========== */
+#dash{display:none;min-height:100vh;background:#F4F4F4}
+
+/* Sidebar */
+#sb{position:fixed;top:0;left:0;bottom:0;width:var(--sb);background:#0D0D0D;border-right:1px solid rgba(255,255,255,.06);z-index:200;display:flex;flex-direction:column;transition:width .25s;overflow:hidden}
+#sb.col{width:var(--sbm)}
+.sb-hd{display:flex;align-items:center;gap:10px;padding:0 16px;height:var(--hh);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-hd img{width:30px;height:30px;object-fit:contain;flex-shrink:0;display:block}
+.sb-brand{min-width:0}
+.sb-brand .sbn{color:#fff;font-weight:800;font-size:14px;line-height:1}
+.sb-brand .sbn span{color:#f56e1d}
+.sb-brand .sbs{color:rgba(255,255,255,.28);font-size:10px;margin-top:2px}
+.sb-nav{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 8px}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.sb-sec{padding:12px 8px 3px;font-size:10px;font-weight:700;color:rgba(255,255,255,.28);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+#sb.col .sb-sec{opacity:0}
+.si{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;color:rgba(255,255,255,.58);font-size:13px;font-weight:500;white-space:nowrap;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;cursor:pointer;transition:background .12s,color .12s;overflow:hidden}
+.si:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.si.on{background:rgba(245,110,29,.16);color:#f56e1d}
+.si.on i{color:#f56e1d}
+.si i{font-size:16px;flex-shrink:0;color:rgba(255,255,255,.38)}
+.si-lb{flex:1;overflow:hidden;text-overflow:ellipsis}
+.si-bd{background:rgba(245,110,29,.2);color:#f56e1d;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;flex-shrink:0}
+.sb-ft{padding:8px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sb-tog{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;background:transparent;border:none!important;color:rgba(255,255,255,.32);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;overflow:hidden}
+.sb-tog:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.7)}
+
+/* Header */
+#hdr{position:fixed;top:0;right:0;left:var(--sb);height:var(--hh);background:#FFFFFF;border-bottom:1px solid #E8E8E8;z-index:100;display:flex;align-items:center;padding:0 20px;gap:12px;transition:left .25s}
+#hdr.col{left:var(--sbm)}
+.hs{flex:1;max-width:420px;position:relative}
+.hs i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#A3A3A3;font-size:14px;z-index:1}
+.hs input{width:100%;padding:8px 12px 8px 32px;border-radius:8px;font-size:13px;background:#F4F4F4!important}
+.hs input:focus{background:#FFFFFF!important}
+.ha{display:flex;align-items:center;gap:4px;margin-left:auto}
+.hdiv{width:1px;height:24px;background:#E8E8E8;margin:0 4px}
+.hbtn{width:36px;height:36px;position:relative;display:flex;align-items:center;justify-content:center;border:none!important;background:transparent;border-radius:8px;color:#525252;cursor:pointer;transition:background .15s}
+.hbtn:hover{background:#F4F4F4}
+.hbtn i{font-size:18px}
+.ndot{position:absolute;top:7px;right:7px;width:8px;height:8px;background:#f56e1d;border-radius:50%;border:2px solid #fff}
+.ubtn{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border:none!important;background:transparent;border-radius:8px;cursor:pointer;transition:background .15s}
+.ubtn:hover{background:#F4F4F4}
+.uav{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#f56e1d,#e8a327);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.un{font-size:12px;font-weight:600;color:#0D0D0D;line-height:1.25}
+.ud{font-size:10px;color:#A3A3A3}
+
+/* Dropdowns */
+.dd{position:absolute;top:calc(100% + 8px);right:0;background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.10);z-index:300;overflow:hidden;min-width:200px;animation:fadeIn .18s ease}
+.dd.hidden{display:none!important}
+.dd-hd{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #F2F2F2}
+.dd-hd span{font-weight:700;font-size:13px;color:#0D0D0D;flex:1}
+.dd-cl{background:none!important;border:none!important;cursor:pointer;color:#A3A3A3;font-size:16px;padding:0;line-height:1}
+.ni{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid #F2F2F2;cursor:pointer;transition:background .12s}
+.ni:last-child{border:none}
+.ni:hover{background:#F4F4F4}
+.ni i{flex-shrink:0;margin-top:2px;font-size:14px}
+.nt{font-size:12px;font-weight:600;color:#0D0D0D;margin-bottom:2px}
+.nm{font-size:11px;color:#737373;line-height:1.4}
+.ntime{font-size:10px;color:#A3A3A3;margin-top:2px}
+.udd-top{padding:12px 14px;border-bottom:1px solid #F2F2F2}
+.udd-n{font-size:13px;font-weight:700;color:#0D0D0D}
+.udd-e{font-size:11px;color:#A3A3A3;margin-top:1px}
+.udd-r{display:inline-flex;margin-top:7px;padding:2px 9px;border-radius:99px;background:#fff8f4;border:1px solid #ffe0cc;font-size:10px;font-weight:700;color:#f56e1d}
+.dl{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:13px;color:#525252;cursor:pointer;border:none!important;background:transparent;width:100%;text-align:left;transition:background .12s}
+.dl:hover{background:#F4F4F4}
+.dl i{font-size:14px}
+.dl.dng{color:#ef4444}
+.dl.dng:hover{background:#fef2f2}
+.ds{border-top:1px solid #F2F2F2}
+
+/* Main */
+#main{padding-top:var(--hh);padding-left:var(--sb);transition:padding-left .25s;min-height:100vh}
+#main.col{padding-left:var(--sbm)}
+.pg{display:none;padding:24px;animation:fadeIn .3s ease}
+.pg.on{display:block}
+
+/* ========== DASHBOARD ========== */
+.wb{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.wb h1{font-size:24px;font-weight:900;color:#0D0D0D;margin-bottom:4px}
+.wb .dt{font-size:13px;color:#737373}
+.sprint-b{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;background:#fff8f4;border:1px solid #ffe0cc;border-radius:10px}
+.sprint-b .dot{width:6px;height:6px;border-radius:50%;background:#f56e1d;animation:pulse 2s infinite}
+.sprint-b span{font-size:12px;font-weight:600;color:#f56e1d}
+.kg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.kc{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;padding:18px}
+.kt{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.ki{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.ki i{font-size:18px}
+.kv{font-size:30px;font-weight:900;color:#0D0D0D;line-height:1}
+.kl{font-size:12px;color:#737373;font-weight:500;margin-top:3px}
+.kch{font-size:11px;font-weight:600;margin-top:5px}
+.up{color:#22c55e}.dn{color:#3b82f6}.wn{color:#dc4155}
+.cg{display:grid;grid-template-columns:1fr 280px;gap:16px}
+.strow{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.stit{font-size:16px;font-weight:700;color:#0D0D0D}
+.smeta{font-size:12px;color:#A3A3A3}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mc{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;padding:15px;cursor:pointer;transition:box-shadow .15s,transform .15s,border-color .15s;display:flex;flex-direction:column}
+.mc:hover{box-shadow:0 4px 20px rgba(245,110,29,.10);transform:translateY(-1px);border-color:#f5c4ab}
+.mc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px}
+.mc-ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mc-ic i{font-size:17px}
+.ms-dev{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;background:#eff6ff}
+.ms-dev .dot{width:5px;height:5px;border-radius:50%;background:#60a5fa}
+.ms-dev span{font-size:10px;font-weight:600;color:#3b82f6}
+.mc-name{font-size:13px;font-weight:700;color:#0D0D0D;margin-bottom:3px}
+.mc-desc{font-size:11px;color:#737373;line-height:1.5;flex:1}
+.mc-ft{display:flex;align-items:center;gap:4px;margin-top:11px;padding-top:11px;border-top:1px solid #F2F2F2}
+.mc-ft span{font-size:11px;font-weight:600}
+.mc-ft i{font-size:11px}
+.sp{display:flex;flex-direction:column;gap:12px}
+.pc{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;padding:16px}
+.pt{font-size:14px;font-weight:700;color:#0D0D0D;margin-bottom:12px}
+.ai{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #F2F2F2}
+.ai:last-child{border:none}
+.av{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0}
+.at{font-size:12px;color:#0D0D0D;line-height:1.4}
+.at strong{font-weight:600}
+.at em{color:#737373;font-style:normal}
+.atime{font-size:10px;color:#A3A3A3;margin-top:2px}
+.ql{display:flex;align-items:center;justify-content:space-between;padding:7px 9px;border-radius:7px;cursor:pointer;transition:background .12s}
+.ql:hover{background:#F4F4F4}
+.ql-n{font-size:13px;font-weight:600;color:#525252}
+.qb{font-size:10px;font-weight:700;padding:1px 6px;background:#fff8f4;color:#f56e1d;border-radius:99px;border:1px solid #ffe0cc}
+.schip{background:#fff8f4;border:1px solid #ffe0cc;border-radius:12px;padding:14px;display:flex;gap:10px}
+.schip img{width:26px;height:26px;object-fit:contain;flex-shrink:0}
+.schip-t{font-size:12px;font-weight:700;color:#0D0D0D}
+.schip-s{font-size:11px;color:#737373;margin-top:3px;line-height:1.5}
+
+/* ========== ADMIN ========== */
+.adm-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.adm-hd h1{font-size:18px;font-weight:800;color:#0D0D0D}
+.sub{font-size:12px;color:#737373;margin-top:2px}
+.btn-add{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:linear-gradient(135deg,#f56e1d,#e8a327);color:#fff!important;font-weight:700;font-size:13px;border:none!important;border-radius:8px;cursor:pointer;transition:opacity .15s}
+.btn-add:hover{opacity:.9}
+.asg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.asc{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.asc-ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.asc-ic i{font-size:16px}
+.asc-v{font-size:22px;font-weight:900;color:#0D0D0D;line-height:1}
+.asc-l{font-size:10px;color:#737373;margin-top:2px}
+.tb-wrap{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.tb-tool{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #F2F2F2;flex-wrap:wrap}
+.tb-tool-l{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap}
+.sb-inp{position:relative}
+.sb-inp i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#A3A3A3;font-size:13px;z-index:1}
+.sb-inp input{padding:8px 12px 8px 30px;border-radius:8px;font-size:13px;width:200px}
+.fsel{padding:8px 30px 8px 12px;border-radius:8px;font-size:13px}
+.uc{font-size:12px;color:#A3A3A3;margin-left:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#F4F4F4;border-bottom:1px solid #E8E8E8}
+th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:#A3A3A3;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;cursor:pointer;color:#A3A3A3!important}
+th:hover{color:#525252!important}
+tbody tr{border-bottom:1px solid #F2F2F2;transition:background .12s}
+tbody tr:last-child{border:none}
+tbody tr:hover{background:#F4F4F4}
+td{padding:12px 16px;font-size:13px;color:#0D0D0D;vertical-align:middle}
+.u-cell{display:flex;align-items:center;gap:10px}
+.u-av{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.u-name{font-weight:600;font-size:13px;line-height:1.3}
+.u-email{font-size:11px;color:#A3A3A3;margin-top:1px}
+.rbadge{display:inline-flex;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap}
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.sbadge .dot{width:5px;height:5px;border-radius:50%}
+.sbadge.act{background:#f0fdf4;color:#16a34a}.sbadge.act .dot{background:#22c55e}
+.sbadge.pnd{background:#fffbeb;color:#d97706}.sbadge.pnd .dot{background:#f59e0b}
+.sbadge.ina{background:#F4F4F4;color:#A3A3A3}.sbadge.ina .dot{background:#A3A3A3}
+.acts{display:flex;align-items:center;gap:4px;justify-content:flex-end}
+.ab{width:28px;height:28px;border-radius:6px;border:none!important;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:#A3A3A3}
+.ab i{font-size:14px}
+.ab:hover.e{background:#eff6ff;color:#3b82f6}
+.ab:hover.r{background:#fffbeb;color:#d97706}
+.ab:hover.t{background:#f0fdf4;color:#22c55e}
+.ab:hover.d{background:#fef2f2;color:#ef4444}
+.rg{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;overflow:hidden}
+.rg-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #F2F2F2;cursor:pointer}
+.rg-t{font-size:13px;font-weight:700;color:#0D0D0D}
+.rgg{display:grid;grid-template-columns:repeat(4,1fr)}
+.rgc{padding:12px 14px;border-right:1px solid #F2F2F2;border-bottom:1px solid #F2F2F2}
+.rgc:nth-child(4n){border-right:none}
+.rgc-b{display:inline-flex;margin-bottom:5px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700}
+.rgc-n{font-size:11px;font-weight:700;color:#0D0D0D;margin-bottom:3px}
+.rgc-d{font-size:10px;color:#737373;line-height:1.5}
+
+/* ========== TAREAS ========== */
+.tk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.tk-stat{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:10px;padding:14px}
+.tk-stat-n{font-size:11px;color:#A3A3A3;margin-bottom:4px}
+.tk-stat-v{font-size:22px;font-weight:900;color:#0D0D0D;line-height:1}
+.tk-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tk-tl{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+.tk-search{position:relative}
+.tk-search i{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#A3A3A3;z-index:1}
+.tk-search input{padding:8px 10px 8px 28px;border-radius:8px;font-size:13px;width:190px}
+.tk-sel{padding:8px 28px 8px 10px;border-radius:8px;font-size:13px}
+.view-tabs{display:flex;gap:2px;background:#F4F4F4;border-radius:8px;padding:2px}
+.vt{padding:5px 11px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none!important;background:transparent;color:#737373;display:flex;align-items:center;gap:4px;transition:all .12s}
+.vt i{font-size:13px}
+.vt.on{background:#FFFFFF;color:#0D0D0D;box-shadow:0 0.5px 3px rgba(0,0,0,.08)}
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:start}
+.kb-col-hd{display:flex;align-items:center;margin-bottom:10px}
+.kb-col-title{font-size:12px;font-weight:700;color:#0D0D0D;display:flex;align-items:center;gap:6px}
+.kb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.kb-ct{font-size:10px;color:#A3A3A3;background:#F4F4F4;border-radius:99px;padding:1px 6px;font-weight:600}
+.kb-pend .kb-dot{background:#f59e0b}
+.kb-prog .kb-dot{background:#f56e1d}
+.kb-done .kb-dot{background:#22c55e}
+.tk-card{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.tk-card:hover{border-color:#f5c4ab;box-shadow:0 2px 10px rgba(245,110,29,.08)}
+.tk-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;gap:6px}
+.tk-title{font-size:12px;font-weight:700;color:#0D0D0D;line-height:1.4;flex:1}
+.tk-proj{font-size:10px;color:#737373;margin-bottom:7px;display:flex;align-items:center;gap:3px}
+.tk-proj i{font-size:11px;color:#A3A3A3}
+.tk-foot{display:flex;align-items:center;justify-content:space-between;margin-top:7px;padding-top:7px;border-top:1px solid #F2F2F2}
+.tk-resp{display:flex;align-items:center;gap:5px;font-size:10px;color:#737373}
+.tk-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0}
+.tk-date{font-size:10px;color:#A3A3A3;display:flex;align-items:center;gap:2px}
+.tk-date i{font-size:10px}
+.tk-date.vence{color:#dc2626}
+.pr-alta{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.pr-media{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.pr-baja{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.prbadge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;flex-shrink:0}
+.tk-list-wrap{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:10px;overflow:hidden}
+.tk-list-hdr{display:grid;grid-template-columns:2.5fr 1.5fr 1fr 1fr 1fr 70px;background:#F4F4F4;border-bottom:1px solid #E8E8E8}
+.tk-list-hdr span{padding:8px 12px;font-size:10px;font-weight:700;color:#A3A3A3!important;text-transform:uppercase;letter-spacing:.05em}
+.tk-list-row{display:grid;grid-template-columns:2.5fr 1.5fr 1fr 1fr 1fr 70px;border-bottom:1px solid #F2F2F2;align-items:center;cursor:pointer;transition:background .12s}
+.tk-list-row:last-child{border:none}
+.tk-list-row:hover{background:#F4F4F4}
+.tk-list-row span{padding:9px 12px;font-size:12px;color:#0D0D0D}
+.tk-st-pend{background:#fffbeb;color:#92400e}
+.tk-st-prog{background:#fff8f4;color:#9a3412}
+.tk-st-done{background:#f0fdf4;color:#166534}
+.tk-stbadge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600}
+.tk-stbadge .dot{width:4px;height:4px;border-radius:50%}
+.tk-st-pend .dot{background:#f59e0b}
+.tk-st-prog .dot{background:#f56e1d}
+.tk-st-done .dot{background:#22c55e}
+.tk-empty{text-align:center;padding:28px;color:#A3A3A3;font-size:12px;border:1.5px dashed #E8E8E8;border-radius:10px}
+.tk-empty i{font-size:24px;display:block;margin-bottom:6px;color:#E8E8E8}
+
+/* ========== MODALS ========== */
+.mo-wrap{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;padding:20px}
+.mo-wrap.hidden{display:none!important}
+.mo-wrap.open{display:flex;animation:fadeIn .2s ease}
+.mo-box{background:#FFFFFF;border-radius:18px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.18);overflow:hidden}
+.mo-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #F2F2F2}
+.mo-title{font-size:15px;font-weight:700;color:#0D0D0D}
+.mo-cl{width:28px;height:28px;border-radius:6px;border:none!important;background:#F4F4F4;color:#737373;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1}
+.mo-cl:hover{background:#E8E8E8}
+.mo-body{padding:22px 24px;max-height:70vh;overflow-y:auto}
+.mo-ft{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid #F2F2F2;background:#F4F4F4}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fr.full{grid-template-columns:1fr}
+.ff label{display:block;font-size:12px;font-weight:600;color:#262626;margin-bottom:5px}
+.ff input,.ff select,.ff textarea{width:100%;padding:9px 12px;border-radius:8px;font-size:13px}
+.ff textarea{min-height:70px;resize:vertical;padding:9px 12px}
+.pg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.pi{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #E8E8E8!important;border-radius:8px;cursor:pointer;transition:all .12s;background:#FFFFFF}
+.pi:hover,.pi.ck{border-color:#f56e1d!important;background:#fff8f4}
+.pch{width:16px;height:16px;border-radius:4px;border:1.5px solid #E8E8E8!important;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;background:#FFFFFF}
+.pi.ck .pch{background:#f56e1d;border-color:#f56e1d!important}
+.pi.ck .pch i{color:#fff;font-size:11px}
+.pl{font-size:12px;font-weight:500;color:#525252}
+.btn-sec{padding:9px 18px;border:1.5px solid #E8E8E8!important;border-radius:8px;font-size:13px;font-weight:600;color:#525252;background:#FFFFFF;cursor:pointer;transition:background .12s}
+.btn-sec:hover{background:#F4F4F4}
+.btn-pri{padding:9px 20px;background:linear-gradient(135deg,#f56e1d,#e8a327);border:none!important;border-radius:8px;font-size:13px;font-weight:700;color:#fff!important;cursor:pointer;transition:opacity .12s}
+.btn-pri:hover{opacity:.9}
+
+/* ========== PLACEHOLDER ========== */
+.ph-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:440px;text-align:center}
+.ph-back{display:inline-flex;align-items:center;gap:7px;margin-bottom:20px;align-self:flex-start;padding:8px 16px;background:#FFFFFF;border:1px solid #E8E8E8!important;border-radius:8px;font-size:13px;font-weight:600;color:#525252;cursor:pointer;transition:background .12s}
+.ph-back:hover{background:#F4F4F4}
+.ph-ic{width:72px;height:72px;border-radius:16px;background:rgba(245,110,29,.10);border:2px solid rgba(245,110,29,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ph-ic i{font-size:30px;color:#f56e1d}
+.ph-dev{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:#eff6ff;border:1px solid #dbeafe;border-radius:99px;margin-bottom:12px}
+.ph-dev span{font-size:11px;font-weight:600;color:#3b82f6}
+.ph-name{font-size:26px;font-weight:900;color:#0D0D0D;margin-bottom:8px}
+.ph-desc{font-size:14px;color:#737373;max-width:420px;line-height:1.65;margin-bottom:24px}
+
+/* ========== TOAST ========== */
+.toast-cnt{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:6px}
+.toast{background:#0D0D0D;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:fadeIn .25s ease;max-width:300px}
+.toast.ok{border-left:3px solid #22c55e}
+.toast.wn{border-left:3px solid #f59e0b}
+.toast.er{border-left:3px solid #ef4444}
+
+#ov{display:none;position:fixed;inset:0;z-index:99}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:1100px){.cg,.rgg{grid-template-columns:1fr}.sp{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.kg,.asg,.tk-stats{grid-template-columns:repeat(2,1fr)}.mg,.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.lb{display:none}.rf{min-height:100vh}}
+@media(max-width:640px){.kg,.tk-stats{grid-template-columns:1fr 1fr}.mg,.kanban,.cg,.asg,.sp,.rgg{grid-template-columns:1fr}.fr{grid-template-columns:1fr}.pg-grid{grid-template-columns:1fr}.tk-list-hdr,.tk-list-row{grid-template-columns:2fr 1fr 1fr 50px}}
+
+/* ================================================================
+   CENTRO DOCUMENTAL
+   ================================================================ */
+.doc-grid{display:grid;grid-template-columns:260px 1fr;gap:16px;align-items:start}
+.doc-tree{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;overflow:hidden;position:sticky;top:24px}
+.doc-tree-hd{padding:14px 16px;border-bottom:1px solid #F2F2F2;display:flex;align-items:center;justify-content:space-between}
+.doc-tree-hd span{font-size:13px;font-weight:700;color:#0D0D0D}
+.doc-folder{border-bottom:1px solid #F2F2F2}
+.doc-folder:last-child{border:none}
+.doc-folder-hd{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;transition:background .12s;user-select:none}
+.doc-folder-hd:hover{background:#F4F4F4}
+.doc-folder-hd.active{background:#fff8f4}
+.doc-folder-hd.active .df-name{color:#f56e1d;font-weight:700}
+.doc-folder-hd.active .df-ico{color:#f56e1d}
+.df-ico{font-size:15px;color:#A3A3A3;flex-shrink:0;transition:transform .15s}
+.df-ico.open{transform:rotate(90deg)}
+.df-folder-ic{font-size:15px;flex-shrink:0}
+.df-name{font-size:12px;font-weight:500;color:#525252;flex:1}
+.df-ct{font-size:10px;color:#A3A3A3;background:#F4F4F4;border-radius:99px;padding:1px 6px;font-weight:600}
+.doc-subfolders{display:none;background:#FAFAFA;border-top:1px solid #F2F2F2}
+.doc-subfolders.open{display:block}
+.doc-sub{display:flex;align-items:center;gap:7px;padding:8px 14px 8px 32px;cursor:pointer;transition:background .12s;font-size:12px;color:#737373}
+.doc-sub:hover{background:#F4F4F4;color:#0D0D0D}
+.doc-sub.active{background:#fff8f4;color:#f56e1d;font-weight:600}
+.doc-sub i{font-size:13px;flex-shrink:0}
+
+.doc-main{display:flex;flex-direction:column;gap:14px}
+.doc-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.doc-path{display:flex;align-items:center;gap:6px;font-size:13px;color:#737373}
+.doc-path span{color:#0D0D0D;font-weight:600}
+.doc-path i{font-size:11px;color:#A3A3A3}
+.doc-toolbar{display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1px solid #E8E8E8;border-radius:10px;padding:10px 14px;flex-wrap:wrap}
+.doc-tl{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+.doc-search{position:relative}
+.doc-search i{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#A3A3A3;z-index:1}
+.doc-search input{padding:7px 10px 7px 28px;border:1.5px solid #E8E8E8;border-radius:8px;font-size:13px;background:#FFFFFF;outline:none;width:200px;font-family:inherit;color:#0D0D0D}
+.doc-search input:focus{border-color:#f56e1d;box-shadow:0 0 0 2px rgba(245,110,29,.10)}
+.doc-search input::placeholder{color:#A3A3A3}
+.doc-fsel{padding:7px 28px 7px 10px;border:1.5px solid #E8E8E8;border-radius:8px;font-size:13px;background:#FFFFFF;outline:none;font-family:inherit;color:#525252;cursor:pointer}
+.doc-fsel:focus{border-color:#f56e1d}
+
+.doc-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.doc-stat{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.doc-stat-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-stat-ic i{font-size:16px}
+.doc-stat-v{font-size:18px;font-weight:900;color:#0D0D0D;line-height:1}
+.doc-stat-l{font-size:10px;color:#A3A3A3;margin-top:2px}
+
+.doc-list{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:12px;overflow:hidden}
+.doc-list-hdr{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 100px;background:#F4F4F4;border-bottom:1px solid #E8E8E8}
+.doc-list-hdr span{padding:9px 14px;font-size:10px;font-weight:700;color:#A3A3A3;text-transform:uppercase;letter-spacing:.05em}
+.doc-row{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 100px;border-bottom:1px solid #F2F2F2;align-items:center;transition:background .12s;cursor:pointer}
+.doc-row:last-child{border:none}
+.doc-row:hover{background:#F4F4F4}
+.doc-row span{padding:11px 14px;font-size:12px;color:#0D0D0D}
+.doc-row span.muted{color:#737373;font-size:11px}
+.doc-file-cell{display:flex;align-items:center;gap:10px}
+.doc-file-ic{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc-file-ic i{font-size:16px}
+.doc-file-name{font-size:13px;font-weight:600;color:#0D0D0D;line-height:1.3}
+.doc-file-proj{font-size:11px;color:#737373;margin-top:2px}
+.tag-badge{display:inline-flex;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
+.tag-contrato{background:#fff8f4;color:#9a3412;border:1px solid #fed7aa}
+.tag-plano{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.tag-cotizacion{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.tag-acta{background:#fdf4ff;color:#7e22ce;border:1px solid #e9d5ff}
+.tag-proveedor{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+.tag-factura{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.tag-rrhh{background:#f0f9ff;color:#0369a1;border:1px solid #bae6fd}
+.doc-act-btns{display:flex;align-items:center;gap:3px;padding:0 8px;justify-content:flex-end}
+
+.doc-empty{text-align:center;padding:40px 20px;color:#A3A3A3}
+.doc-empty i{font-size:32px;display:block;margin-bottom:10px;color:#E8E8E8}
+.doc-empty p{font-size:13px}
+
+/* Modal subir doc */
+.drop-zone{border:2px dashed #E8E8E8;border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .15s;background:#FAFAFA}
+.drop-zone:hover{border-color:#f56e1d;background:#fff8f4}
+.drop-zone i{font-size:28px;color:#A3A3A3;display:block;margin-bottom:8px}
+.drop-zone p{font-size:13px;color:#737373}
+.drop-zone strong{color:#f56e1d}
+
+@media(max-width:900px){.doc-grid{grid-template-columns:1fr}.doc-tree{position:static}.doc-stats-row{grid-template-columns:repeat(2,1fr)}.doc-list-hdr,.doc-row{grid-template-columns:2fr 1fr 1fr 80px}}
+
+</style>
+</head>
+<body>
+<div id="toast-cnt" class="toast-cnt"></div>
+
+<!-- ============================== LOGIN ============================== -->
+<div id="login">
+  <div class="lb">
+    <div class="lb-logo">
+      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc4155"/><stop offset="100%" stop-color="#f56e1d"/></linearGradient></defs><path d="M50 8 L88 42 L88 88 L12 88 L12 42 Z" fill="none" stroke="url(#hg)" stroke-width="7" stroke-linejoin="round"/><path d="M50 20 L80 46 L80 82 L20 82 L20 46 Z" fill="none" stroke="url(#hg)" stroke-width="6" stroke-linejoin="round"/><path d="M50 32 L68 48 L68 74 L32 74 L32 48 Z" fill="none" stroke="url(#hg)" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="58" r="6" fill="url(#hg)"/><line x1="36" y1="88" x2="36" y2="94" stroke="url(#hg)" stroke-width="5" stroke-linecap="round"/><line x1="64" y1="88" x2="64" y2="94" stroke="url(#hg)" stroke-width="5" stroke-linecap="round"/></svg>
+      <div>
+        <div class="lb-logo-name">VIS<span>NET</span></div>
+      </div>
+    </div>
+    <div class="lb-hero">
+      <div class="lb-badge"><div class="dot"></div><span>Sistema Operativo Digital v1.0</span></div>
+      <div class="lb-h1">Todo tu equipo.<br><em>Un solo lugar.</em></div>
+      <div class="lb-p">Centraliza proyectos, tareas, documentos y aprobaciones de <strong>Grupo Visualizza</strong> en una plataforma disenada para operar con precision.</div>
+      <div class="lb-stats">
+        <div><div class="lb-sv">17</div><div class="lb-sl">Modulos</div></div>
+        <div><div class="lb-sv">12</div><div class="lb-sl">Proyectos</div></div>
+        <div><div class="lb-sv">inf</div><div class="lb-sl">Escalabilidad</div></div>
+      </div>
+    </div>
+    <div class="lb-foot">2026 Grupo Visualizza S.A.S. <span>Confidencial</span></div>
+  </div>
+
+  <div class="rf">
+    <div class="rc">
+      <div class="rbox">
+        <h2>Bienvenida de nuevo</h2>
+        <p class="sub">Ingresa a tu cuenta VISNET para continuar</p>
+
+        <div class="fg">
+          <label class="fl">Correo corporativo</label>
+          <div class="iw">
+            <i class="ti ti-mail ico" aria-hidden="true"></i>
+            <input class="vi" id="inp-e" type="email" value="carolina@acabadosvis.com" placeholder="carolina@acabadosvis.com" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="fg">
+          <div class="flr">
+            <label class="fl">Contrasena</label>
+            <span class="flink">Olvidaste tu contrasena?</span>
+          </div>
+          <div class="iw">
+            <i class="ti ti-lock ico" aria-hidden="true"></i>
+            <input class="vi vi-pass" id="inp-p" type="password" value="demo1234" placeholder="Contrasena" autocomplete="current-password">
+            <button class="eye" onclick="toggleEye()" type="button">
+              <i class="ti ti-eye" id="eye-i" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-b">
+          <i class="ti ti-info-circle ico-org" aria-hidden="true"></i>
+          <span><strong>Demo Sprint 1</strong> &mdash; Haz clic en "Ingresar a VISNET".</span>
+        </div>
+
+        <button class="btn-in" id="btn-in" type="button" onclick="doLogin()">
+          <i class="ti ti-login" aria-hidden="true"></i>
+          Ingresar a VISNET
+        </button>
+      </div>
+      <p class="rfoot">Acceso restringido &mdash; <strong>Grupo Visualizza S.A.S.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== DASHBOARD ============================== -->
+<div id="dash">
+
+  <!-- Sidebar -->
+  <aside id="sb" role="navigation">
+    <div class="sb-hd">
+      <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc4155"/><stop offset="100%" stop-color="#f56e1d"/></linearGradient></defs><path d="M50 8 L88 42 L88 88 L12 88 L12 42 Z" fill="none" stroke="url(#hg2)" stroke-width="7" stroke-linejoin="round"/><path d="M50 20 L80 46 L80 82 L20 82 L20 46 Z" fill="none" stroke="url(#hg2)" stroke-width="6" stroke-linejoin="round"/><path d="M50 32 L68 48 L68 74 L32 74 L32 48 Z" fill="none" stroke="url(#hg2)" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="58" r="6" fill="url(#hg2)"/></svg>
+      <div class="sb-brand" id="sb-brand">
+        <div class="sbn">VIS<span>NET</span></div>
+        <div class="sbs">AcabadosVIS</div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sb-nav">
+      <button class="si on" id="nav-dashboard" onclick="navTo('dashboard')" type="button">
+        <i class="ti ti-layout-dashboard" aria-hidden="true"></i><span class="si-lb">Dashboard</span>
+      </button>
+      <div class="sb-sec">Modulos</div>
+      <div id="sb-mods"></div>
+      <div class="sb-sec">Sistema</div>
+      <div id="sb-sys"></div>
+    </nav>
+    <div class="sb-ft">
+      <button class="sb-tog" onclick="toggleSB()" type="button" id="sb-tog">
+        <i class="ti ti-layout-sidebar-left-collapse" id="sb-tog-i" aria-hidden="true" style="font-size:16px;flex-shrink:0"></i>
+        <span class="si-lb" style="font-size:12px">Colapsar</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header id="hdr">
+    <div class="hs">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" placeholder="Buscar modulos, tareas...">
+    </div>
+    <div class="ha">
+      <div style="position:relative">
+        <button class="hbtn" onclick="toggleDD('dd-n')" type="button" aria-label="Notificaciones">
+          <i class="ti ti-bell" aria-hidden="true"></i>
+          <span class="ndot"></span>
+        </button>
+        <div class="dd hidden" id="dd-n" style="width:290px">
+          <div class="dd-hd"><span>Notificaciones</span><button class="dd-cl" onclick="closeDD('dd-n')" type="button">x</button></div>
+          <div id="n-list"></div>
+        </div>
+      </div>
+      <div class="hdiv"></div>
+      <div style="position:relative">
+        <button class="ubtn" onclick="toggleDD('dd-u')" type="button">
+          <div class="uav">CC</div>
+          <div><div class="un">Carolina Chacon</div><div class="ud">Direccion General</div></div>
+          <i class="ti ti-chevron-down" aria-hidden="true" style="font-size:12px;color:#A3A3A3;margin-left:2px"></i>
+        </button>
+        <div class="dd hidden" id="dd-u" style="width:210px">
+          <div class="udd-top">
+            <div class="udd-n">Carolina Chacon</div>
+            <div class="udd-e">carolina@acabadosvis.com</div>
+            <div class="udd-r">Admin Principal</div>
+          </div>
+          <button class="dl" onclick="closeDD('dd-u')" type="button"><i class="ti ti-user" aria-hidden="true"></i>Mi perfil</button>
+          <button class="dl" onclick="closeDD('dd-u')" type="button"><i class="ti ti-settings" aria-hidden="true"></i>Configuracion</button>
+          <div class="ds">
+            <button class="dl dng" onclick="doLogout()" type="button"><i class="ti ti-logout" aria-hidden="true"></i>Cerrar sesion</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main id="main" role="main">
+
+    <!-- Dashboard -->
+    <div class="pg on" id="pg-dashboard">
+      <div class="wb">
+        <div><h1 id="wlc">Buenas tardes, Carolina</h1><p class="dt" id="wdt"></p></div>
+        <div class="sprint-b"><div class="dot"></div><span>VISNET v1.0 &mdash; Sprint 1</span></div>
+      </div>
+      <div class="kg">
+        <div class="kc"><div class="kt"><div class="ki" style="background:rgba(59,130,246,.10)"><i class="ti ti-layers-subtract" aria-hidden="true" style="color:#3b82f6;font-size:18px"></i></div><i class="ti ti-trending-up" aria-hidden="true" style="color:#22c55e;font-size:13px"></i></div><div class="kv">8</div><div class="kl">Proyectos activos</div><div class="kch up">+2 este mes</div></div>
+        <div class="kc"><div class="kt"><div class="ki" style="background:rgba(245,110,29,.10)"><i class="ti ti-checkbox" aria-hidden="true" style="color:#f56e1d;font-size:18px"></i></div><i class="ti ti-trending-down" aria-hidden="true" style="color:#3b82f6;font-size:13px"></i></div><div class="kv">24</div><div class="kl">Tareas pendientes</div><div class="kch dn">-4 vs ayer</div></div>
+        <div class="kc"><div class="kt"><div class="ki" style="background:rgba(220,65,85,.10)"><i class="ti ti-thumb-up" aria-hidden="true" style="color:#dc4155;font-size:18px"></i></div><i class="ti ti-minus" aria-hidden="true" style="color:#A3A3A3;font-size:13px"></i></div><div class="kv">3</div><div class="kl">Aprobaciones</div><div class="kch wn">Requieren accion</div></div>
+        <div class="kc"><div class="kt"><div class="ki" style="background:rgba(34,197,94,.10)"><i class="ti ti-users" aria-hidden="true" style="color:#22c55e;font-size:18px"></i></div><i class="ti ti-trending-up" aria-hidden="true" style="color:#22c55e;font-size:13px"></i></div><div class="kv">18</div><div class="kl">Equipo activo</div><div class="kch up">conectados hoy</div></div>
+      </div>
+      <div class="cg">
+        <div>
+          <div class="strow"><span class="stit">Modulos VISNET</span><span class="smeta">12 modulos</span></div>
+          <div class="mg" id="mod-grid"></div>
+        </div>
+        <div class="sp">
+          <div class="pc"><div class="pt">Actividad reciente</div><div id="act-list"></div></div>
+          <div class="pc"><div class="pt">Accesos rapidos</div><div id="ql-list"></div></div>
+          <div class="schip">
+            <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc4155"/><stop offset="100%" stop-color="#f56e1d"/></linearGradient></defs><path d="M50 8 L88 42 L88 88 L12 88 L12 42 Z" fill="none" stroke="url(#hg2)" stroke-width="7" stroke-linejoin="round"/><path d="M50 20 L80 46 L80 82 L20 82 L20 46 Z" fill="none" stroke="url(#hg2)" stroke-width="6" stroke-linejoin="round"/><path d="M50 32 L68 48 L68 74 L32 74 L32 48 Z" fill="none" stroke="url(#hg2)" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="58" r="6" fill="url(#hg2)"/></svg>
+            <div><div class="schip-t">VISNET v1.0</div><div class="schip-s">Interfaz base lista. Firebase + Supabase en Sprint 2.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin -->
+    <div class="pg" id="pg-admin">
+      <div class="adm-hd">
+        <div><h1>Administracion <span style="color:#737373;font-weight:500;font-size:14px">/ Usuarios y Roles</span></h1><p class="sub">Gestion del equipo y niveles de acceso a VISNET</p></div>
+        <button class="btn-add" onclick="openMo('create')" type="button"><i class="ti ti-plus" aria-hidden="true"></i>Nuevo usuario</button>
+      </div>
+      <div class="asg">
+        <div class="asc"><div class="asc-ic" style="background:rgba(245,110,29,.10)"><i class="ti ti-users" aria-hidden="true" style="color:#f56e1d"></i></div><div><div class="asc-v" id="st-t">8</div><div class="asc-l">Total usuarios</div></div></div>
+        <div class="asc"><div class="asc-ic" style="background:rgba(34,197,94,.10)"><i class="ti ti-circle-check" aria-hidden="true" style="color:#22c55e"></i></div><div><div class="asc-v" id="st-a">6</div><div class="asc-l">Activos</div></div></div>
+        <div class="asc"><div class="asc-ic" style="background:rgba(245,158,11,.10)"><i class="ti ti-clock" aria-hidden="true" style="color:#f59e0b"></i></div><div><div class="asc-v" id="st-p">2</div><div class="asc-l">Pendientes</div></div></div>
+        <div class="asc"><div class="asc-ic" style="background:rgba(99,102,241,.10)"><i class="ti ti-shield-check" aria-hidden="true" style="color:#6366f1"></i></div><div><div class="asc-v">8</div><div class="asc-l">Roles definidos</div></div></div>
+      </div>
+      <div class="tb-wrap">
+        <div class="tb-tool">
+          <div class="tb-tool-l">
+            <div class="sb-inp"><i class="ti ti-search" aria-hidden="true"></i><input type="text" id="u-s" placeholder="Buscar usuario..." oninput="filterU()"></div>
+            <select class="fsel" id="u-r" onchange="filterU()"><option value="">Todos los roles</option><option>Administrador Principal</option><option>Administrador</option><option>Operaciones</option><option>Coordinador de Operaciones</option><option>Coordinador Administrativo</option><option>Contabilidad</option><option>Comercial</option><option>Administrativo</option><option>Marketing</option><option>Desarrollo</option><option>Presupuestos</option><option>Conductor</option></select>
+            <select class="fsel" id="u-st" onchange="filterU()"><option value="">Todos</option><option value="act">Activo</option><option value="pnd">Pendiente</option><option value="ina">Inactivo</option></select>
+          </div>
+          <span class="uc" id="u-c"></span>
+        </div>
+        <table><thead><tr><th onclick="sortU('n')">Usuario</th><th onclick="sortU('r')">Rol</th><th>Departamento</th><th onclick="sortU('s')">Estado</th><th>Ultimo acceso</th><th style="text-align:right">Acciones</th></tr></thead><tbody id="u-tb"></tbody></table>
+      </div>
+      <div class="rg">
+        <div class="rg-hd" onclick="toggleRG()"><span class="rg-t"><i class="ti ti-book" aria-hidden="true" style="font-size:13px;margin-right:5px"></i>Guia de Roles</span><i class="ti ti-chevron-down" id="rg-ch" aria-hidden="true" style="color:#A3A3A3;font-size:14px;transition:transform .2s"></i></div>
+        <div id="rg-b" style="display:none"><div class="rgg" id="rg-g"></div></div>
+      </div>
+    </div>
+
+    <!-- Tareas -->
+    <div class="pg" id="pg-tareas">
+      <div class="adm-hd">
+        <div><h1><i class="ti ti-checkbox" aria-hidden="true" style="color:#f56e1d;margin-right:6px"></i>Tareas <span style="color:#737373;font-weight:500;font-size:14px">/ Actividades por proyecto</span></h1><p class="sub">Proyectos de Grupo Visualizza S.A.S.</p></div>
+        <button class="btn-add" onclick="tkOpenMo()" type="button"><i class="ti ti-plus" aria-hidden="true"></i>Nueva tarea</button>
+      </div>
+      <div class="tk-stats">
+        <div class="tk-stat"><div class="tk-stat-n">Total tareas</div><div class="tk-stat-v" id="tk-st-t">12</div><div style="font-size:10px;color:#A3A3A3;margin-top:3px">registradas</div></div>
+        <div class="tk-stat"><div class="tk-stat-n">Pendientes</div><div class="tk-stat-v" id="tk-st-p" style="color:#f59e0b">4</div><div style="font-size:10px;color:#f59e0b;margin-top:3px">por iniciar</div></div>
+        <div class="tk-stat"><div class="tk-stat-n">En progreso</div><div class="tk-stat-v" id="tk-st-i" style="color:#f56e1d">4</div><div style="font-size:10px;color:#f56e1d;margin-top:3px">activas</div></div>
+        <div class="tk-stat"><div class="tk-stat-n">Completadas</div><div class="tk-stat-v" id="tk-st-d" style="color:#22c55e">4</div><div style="font-size:10px;color:#22c55e;margin-top:3px">este mes</div></div>
+      </div>
+      <div class="tk-toolbar">
+        <div class="tk-tl">
+          <div class="tk-search"><i class="ti ti-search" aria-hidden="true"></i><input type="text" id="tk-q" placeholder="Buscar tarea..." oninput="tkRender()"></div>
+          <select class="tk-sel" id="tk-fp" onchange="tkRender()"><option value="">Todos los proyectos</option></select>
+          <select class="tk-sel" id="tk-fpr" onchange="tkRender()"><option value="">Todas las prioridades</option><option>Alta</option><option>Media</option><option>Baja</option></select>
+          <select class="tk-sel" id="tk-fr" onchange="tkRender()"><option value="">Todos los responsables</option></select>
+        </div>
+        <div class="view-tabs">
+          <button class="vt on" id="vt-k" onclick="tkSetView('kanban')" type="button"><i class="ti ti-layout-columns" aria-hidden="true"></i>Kanban</button>
+          <button class="vt" id="vt-l" onclick="tkSetView('lista')" type="button"><i class="ti ti-list" aria-hidden="true"></i>Lista</button>
+        </div>
+      </div>
+      <div id="tk-view"></div>
+    </div>
+
+    <!-- Placeholder -->
+    <div class="pg" id="pg-module">
+      <div class="ph-wrap">
+        <button class="ph-back" onclick="navTo('dashboard')" type="button"><i class="ti ti-arrow-left" aria-hidden="true"></i>Volver al Dashboard</button>
+        <div class="ph-ic"><i class="ti ti-tool" id="ph-i" aria-hidden="true"></i></div>
+        <div class="ph-dev"><i class="ti ti-clock" aria-hidden="true" style="color:#3b82f6;font-size:12px"></i><span>En desarrollo &mdash; Fase 2</span></div>
+        <div class="ph-name" id="ph-n"></div>
+        <div class="ph-desc" id="ph-d"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal usuario -->
+  <div class="mo-wrap hidden" id="mo-u">
+    <div class="mo-box">
+      <div class="mo-hd"><span class="mo-title" id="mo-t">Nuevo usuario</span><button class="mo-cl" onclick="closeMo('mo-u')" type="button">x</button></div>
+      <div class="mo-body">
+        <div class="fr"><div class="ff"><label>Nombre completo *</label><input type="text" id="f-n" placeholder="Maria Torres"></div><div class="ff"><label>Cargo</label><input type="text" id="f-j" placeholder="Coordinadora de Obra"></div></div>
+        <div class="fr"><div class="ff"><label>Correo *</label><input type="email" id="f-e" placeholder="nombre@acabadosvis.com"></div><div class="ff"><label>Telefono</label><input type="text" id="f-ph" placeholder="+57 300 000 0000"></div></div>
+        <div class="fr"><div class="ff"><label>Rol *</label><select id="f-r" onchange="updPerms()"><option value="">Seleccionar...</option><option>Administrador Principal</option><option>Administrador</option><option>Operaciones</option><option>Coordinador de Operaciones</option><option>Coordinador Administrativo</option><option>Contabilidad</option><option>Comercial</option><option>Administrativo</option><option>Marketing</option><option>Desarrollo</option><option>Presupuestos</option><option>Conductor</option></select></div><div class="ff"><label>Departamento</label><select id="f-d"><option value="">Seleccionar...</option><option>Direccion General</option><option>Administracion y Logistica</option><option>Operaciones</option><option>Comercial</option><option>Desarrollo y Presupuesto</option><option>Proyectos</option></select></div></div>
+        <div class="fr full"><div class="ff"><label>Permisos de acceso</label><div class="pg-grid" id="pg-g"></div></div></div>
+      </div>
+      <div class="mo-ft"><button class="btn-sec" onclick="closeMo('mo-u')" type="button">Cancelar</button><button class="btn-pri" onclick="saveU()" type="button">Guardar usuario</button></div>
+    </div>
+  </div>
+
+  <!-- Modal confirmar -->
+  <div class="mo-wrap hidden" id="mo-c">
+    <div class="mo-box" style="max-width:400px">
+      <div class="mo-hd"><span class="mo-title" id="mo-ct">Confirmar</span><button class="mo-cl" onclick="closeMo('mo-c')" type="button">x</button></div>
+      <div class="mo-body"><p id="mo-cm" style="font-size:14px;color:#525252;line-height:1.6"></p></div>
+      <div class="mo-ft"><button class="btn-sec" onclick="closeMo('mo-c')" type="button">Cancelar</button><button class="btn-pri" id="mo-cb" type="button">Confirmar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal tarea -->
+  <div class="mo-wrap hidden" id="mo-tk">
+    <div class="mo-box" style="max-width:500px">
+      <div class="mo-hd"><span class="mo-title" id="tk-mo-t">Nueva tarea</span><button class="mo-cl" onclick="tkCloseMo()" type="button">x</button></div>
+      <div class="mo-body">
+        <div class="fr full" style="margin-bottom:14px"><div class="ff"><label>Titulo de la tarea *</label><input type="text" id="tk-f-tit" placeholder="Ej: Visita pre-entrega inmueble"></div></div>
+        <div class="fr full" style="margin-bottom:14px"><div class="ff"><label>Descripcion</label><textarea id="tk-f-desc" placeholder="Detalle de la actividad..."></textarea></div></div>
+        <div class="fr" style="margin-bottom:14px"><div class="ff"><label>Proyecto / Inmueble *</label><select id="tk-f-proy"><option value="">Seleccionar...</option></select></div><div class="ff"><label>Responsable *</label><select id="tk-f-resp"><option value="">Seleccionar...</option></select></div></div>
+        <div class="fr" style="margin-bottom:14px"><div class="ff"><label>Prioridad</label><select id="tk-f-prio"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div><div class="ff"><label>Estado</label><select id="tk-f-est"><option selected>Pendiente</option><option>En progreso</option><option>Completada</option></select></div></div>
+        <div class="fr full"><div class="ff"><label>Fecha limite</label><input type="date" id="tk-f-vence"></div></div>
+      </div>
+      <div class="mo-ft"><button class="btn-sec" onclick="tkCloseMo()" type="button">Cancelar</button><button class="btn-pri" onclick="tkSave()" type="button">Guardar tarea</button></div>
+    </div>
+  </div>
+
+  <div id="ov" onclick="closeAllDD()"></div>
+</div>
+
+<script>
+// ============================== DATOS ==============================
+var MODS=[
+  {id:"optiruta",n:"OPTIRUTA",d:"Optimizacion de rutas con IA.",ic:"ti-route",c:"#3B82F6"},
+  {id:"mapre",n:"MAPRE",d:"Mapeo de proyectos activos.",ic:"ti-map",c:"#8B5CF6"},
+  {id:"cortex",n:"CORTEX",d:"Control de proyectos constructivos.",ic:"ti-brain",c:"#dc4155"},
+  {id:"visco",n:"VISCO",d:"Visibilidad y control de obras.",ic:"ti-eye",c:"#14B8A6"},
+  {id:"euclides",n:"EUCLIDES",d:"Presupuestos y control financiero.",ic:"ti-calculator",c:"#e8a327"},
+  {id:"avis",n:"AVIS",d:"CRM y pipeline comercial.",ic:"ti-trending-up",c:"#22C55E"},
+  {id:"contravis",n:"CONTRAVIS",d:"Control de contratos.",ic:"ti-file-check",c:"#f56e1d"},
+  {id:"siide",n:"SIIDE",d:"Indicadores estrategicos.",ic:"ti-chart-bar",c:"#6366F1"},
+  {id:"avis360",n:"AVIS 360",d:"Vista 360 del cliente.",ic:"ti-users",c:"#0EA5E9"},
+  {id:"autopro",n:"AUTO PRO",d:"Gestion de flota.",ic:"ti-car",c:"#642b73"},
+  {id:"inspector360",n:"INSPECTOR 360",d:"Inspecciones tecnicas en campo.",ic:"ti-clipboard-check",c:"#84CC16"},
+  {id:"rrhh",n:"RRHH",d:"Recursos humanos y nomina.",ic:"ti-user-cog",c:"#c6426e"}
+];
+var SYS=[
+  {id:"tareas",n:"Tareas",ic:"ti-checkbox",b:"12"},
+  {id:"documentos",n:"Centro Documental",ic:"ti-folder"},
+  {id:"aprobaciones",n:"Aprobaciones",ic:"ti-thumb-up",b:"3"},
+  {id:"analytics",n:"Analytics",ic:"ti-chart-pie"},
+  {id:"admin",n:"Administracion",ic:"ti-settings"}
+];
+var NOTIFS=[
+  {ic:"ti-alert-circle",c:"#e8a327",t:"Aprobacion pendiente",m:"Contrato proveedor #045 esperando firma.",ti:"Hace 12 min"},
+  {ic:"ti-circle-check",c:"#22c55e",t:"Tarea completada",m:"Informe SIIDE generado.",ti:"Hace 1h"},
+  {ic:"ti-info-circle",c:"#3b82f6",t:"VISNET v1.0",m:"Bienvenida al sistema de AcabadosVIS.",ti:"Hoy"}
+];
+var ACT=[
+  {in:"MT",bg:"#3B82F6",u:"Maria Torres",a:"actualizo",t:"Contrato Coral 301",ti:"Hace 8 min"},
+  {in:"JP",bg:"#22C55E",u:"Juan Perez",a:"completo",t:"Cotizacion Gomez",ti:"Hace 22 min"},
+  {in:"LR",bg:"#8B5CF6",u:"Laura Rios",a:"subio",t:"Planos Remodelacion",ti:"Hace 45 min"},
+  {in:"CV",bg:"#f56e1d",u:"Carlos Vega",a:"solicito",t:"Compra $4.2M",ti:"Hace 1h"}
+];
+var USERS=[
+  {id:1,n:"Carolina Chacon",e:"carolina@acabadosvis.com",r:"Direccion General",d:"Direccion General",s:"act",l:"Hoy, 9:14 a.m.",j:"CEO",p:"+57 310 0001",i:"CC",c:"#f56e1d"},
+  {id:2,n:"Maria Torres",e:"maria@acabadosvis.com",r:"Coordinador de Operaciones",d:"Operaciones",s:"act",l:"Hoy, 8:30 a.m.",j:"Coordinadora Obra",p:"+57 310 0002",i:"MT",c:"#3b82f6"},
+  {id:3,n:"Juan Perez",e:"juan@acabadosvis.com",r:"Comercial / Ventas",d:"Comercial",s:"act",l:"Hoy, 7:55 a.m.",j:"Ejecutivo Comercial",p:"+57 310 0003",i:"JP",c:"#22c55e"},
+  {id:4,n:"Laura Rios",e:"laura@acabadosvis.com",r:"Coordinador Administrativo",d:"Administracion",s:"act",l:"Ayer, 5:10 p.m.",j:"Coordinadora Adm.",p:"+57 310 0004",i:"LR",c:"#7c3aed"},
+  {id:5,n:"Carlos Vega",e:"carlos@acabadosvis.com",r:"Conductor / Campo",d:"Campo",s:"act",l:"Hoy, 6:00 a.m.",j:"Conductor",p:"+57 310 0005",i:"CV",c:"#dc4155"},
+  {id:6,n:"Sandra Mora",e:"sandra@acabadosvis.com",r:"Contabilidad / Finanzas",d:"Contabilidad",s:"act",l:"Ayer, 3:40 p.m.",j:"Contadora",p:"+57 310 0006",i:"SM",c:"#ca8a04"},
+  {id:7,n:"Andres Lopez",e:"andres@acabadosvis.com",r:"RRHH",d:"Recursos Humanos",s:"pnd",l:"Nunca",j:"Gestor RRHH",p:"+57 310 0007",i:"AL",c:"#a21caf"},
+  {id:8,n:"Isabela Fuentes",e:"isabela@acabadosvis.com",r:"Solo lectura",d:"Comercial",s:"pnd",l:"Nunca",j:"Practicante",p:"+57 310 0008",i:"IF",c:"#64748b"}
+];
+var RC={"Administrador Principal":{bg:"#fff8f4",co:"#f56e1d",br:"#ffe0cc"},"Administrador":{bg:"#fff1f0",co:"#dc4155",br:"#fecdd3"},"Operaciones":{bg:"#eff6ff",co:"#3b82f6",br:"#dbeafe"},"Coordinador de Operaciones":{bg:"#e0f2fe",co:"#0369a1",br:"#bae6fd"},"Coordinador Administrativo":{bg:"#f5f3ff",co:"#7c3aed",br:"#ede9fe"},"Contabilidad":{bg:"#fefce8",co:"#ca8a04",br:"#fef08a"},"Comercial":{bg:"#f0fdf4",co:"#16a34a",br:"#bbf7d0"},"Administrativo":{bg:"#f0f9ff",co:"#0891b2",br:"#cffafe"},"Marketing":{bg:"#fdf4ff",co:"#a21caf",br:"#f5d0fe"},"Desarrollo":{bg:"#f0fdf4",co:"#15803d",br:"#bbf7d0"},"Presupuestos":{bg:"#fffbeb",co:"#b45309",br:"#fde68a"},"Conductor":{bg:"#fff1f2",co:"#be123c",br:"#fecdd3"}};
+var RP={"Administrador Principal":["db","md","tk","dc","ap","an","rh","ad"],"Administrador":["db","md","tk","dc","ap","an","ad"],"Operaciones":["db","md","tk","dc","ap","an"],"Coordinador de Operaciones":["db","md","tk","dc","ap","an"],"Coordinador Administrativo":["db","tk","dc","ap","an","ad"],"Contabilidad":["db","tk","dc","an"],"Comercial":["db","md","tk","dc"],"Administrativo":["db","tk","dc","ap"],"Marketing":["db","md","tk","dc"],"Desarrollo":["db","md","tk","dc","an"],"Presupuestos":["db","tk","dc","an"],"Conductor":["db","tk"]};
+var AP=[{id:"db",l:"Dashboard"},{id:"md",l:"Modulos"},{id:"tk",l:"Tareas"},{id:"dc",l:"Documentos"},{id:"ap",l:"Aprobaciones"},{id:"an",l:"Analytics"},{id:"rh",l:"RRHH"},{id:"ad",l:"Administracion"}];
+var RG=[{n:"Administrador Principal",b:"Admin Total",d:"Acceso completo a todos los modulos y configuracion del sistema.",c:"#f56e1d"},{n:"Administrador",b:"Admin",d:"Acceso amplio a modulos, usuarios y configuracion general.",c:"#dc4155"},{n:"Operaciones",b:"Operaciones",d:"Gestion de proyectos, rutas, inspecciones y seguimiento de obra.",c:"#3b82f6"},{n:"Coordinador de Operaciones",b:"Coord. Ops",d:"Coordinacion de campo, tareas operativas y avance de proyectos.",c:"#0369a1"},{n:"Coordinador Administrativo",b:"Coord. Adm",d:"Documentos, contratos, aprobaciones y procesos administrativos.",c:"#7c3aed"},{n:"Contabilidad",b:"Contabilidad",d:"Presupuestos, reportes financieros y analitica de costos.",c:"#ca8a04"},{n:"Comercial",b:"Comercial",d:"CRM, cotizaciones, clientes y pipeline de ventas.",c:"#16a34a"},{n:"Administrativo",b:"Administrativo",d:"Soporte administrativo, documentacion y aprobaciones internas.",c:"#0891b2"},{n:"Marketing",b:"Marketing",d:"Contenidos, campanas, marca y estrategia digital.",c:"#a21caf"},{n:"Desarrollo",b:"Desarrollo",d:"Proyectos tecnologicos, modulos y desarrollo de producto.",c:"#15803d"},{n:"Presupuestos",b:"Presupuestos",d:"Elaboracion y control de presupuestos y estimaciones de obra.",c:"#b45309"},{n:"Conductor",b:"Conductor",d:"Acceso a tareas y rutas asignadas. Sin acceso a documentacion.",c:"#be123c"}];
+var TK_PROYECTOS=["WELL T1-718","SENDEROS DE FONTIBON T3-411","NOVO CANDELARIA T12-506","LOIRA LA SALLE T1-1207","NATIVO LIVING TU-304","PORTO 13 T1-905","TERRAZAS DE SAN FASON T2-419","CANELO T2-203","BUENAVISTA LIVING T3-1705","PORTO 13 T1-303","TYBA TC-302","BELLALUNA T2-407","WELL T1-708","CORNER VIEW TU-741","53 LIVING T3-106","TINGUAS DE CANTOVAL T1-306","TURPIALES DE CANTOVAL T2-707","WELL T1-701","QUIRA RESERVADO","WELL TU-717","TURPIALES DE CANTOVAL T1-901","TINGUAS DE CANTOVAL T8-108"];
+var TK_EQUIPO=[{n:"Carolina Chacon",i:"CC",c:"#f56e1d"},{n:"Maria Torres",i:"MT",c:"#3b82f6"},{n:"Juan Perez",i:"JP",c:"#22c55e"},{n:"Laura Rios",i:"LR",c:"#7c3aed"},{n:"Carlos Vega",i:"CV",c:"#dc4155"},{n:"Sandra Mora",i:"SM",c:"#ca8a04"},{n:"Andres Lopez",i:"AL",c:"#a21caf"}];
+var TK_TASKS=[
+  {id:1,titulo:"Visita de inspeccion pre-entrega",desc:"Verificar estado del inmueble antes de la entrega formal al cliente.",proyecto:"WELL T1-718",responsable:"Maria Torres",prioridad:"Alta",estado:"En progreso",vence:"2026-07-10"},
+  {id:2,titulo:"Enviar especificaciones actualizadas",desc:"Remitir planos y acabados aprobados al cliente para firma.",proyecto:"PORTO 13 T1-905",responsable:"Laura Rios",prioridad:"Alta",estado:"Pendiente",vence:"2026-07-05"},
+  {id:3,titulo:"Coordinacion obra blanca",desc:"Supervisar avance de obra blanca con contratista asignado.",proyecto:"CANELO T2-203",responsable:"Carolina Chacon",prioridad:"Media",estado:"En progreso",vence:"2026-07-20"},
+  {id:4,titulo:"Cobro cuota carpinteria",desc:"Gestionar pago de cuota segun cronograma.",proyecto:"BUENAVISTA LIVING T3-1705",responsable:"Sandra Mora",prioridad:"Alta",estado:"Pendiente",vence:"2026-07-08"},
+  {id:5,titulo:"Contrato firmado y digitalizado",desc:"Subir contrato al centro documental.",proyecto:"SENDEROS DE FONTIBON T3-411",responsable:"Juan Perez",prioridad:"Media",estado:"Completada",vence:"2026-06-30"},
+  {id:6,titulo:"Gestion separacion cliente",desc:"Confirmar separacion y registrar en sistema.",proyecto:"NOVO CANDELARIA T12-506",responsable:"Juan Perez",prioridad:"Baja",estado:"Completada",vence:"2026-06-25"},
+  {id:7,titulo:"Revision de adicionales aprobados",desc:"Validar adicionales y calcular ajuste de presupuesto.",proyecto:"LOIRA LA SALLE T1-1207",responsable:"Carolina Chacon",prioridad:"Alta",estado:"Pendiente",vence:"2026-07-06"},
+  {id:8,titulo:"Entrega de llaves y acta",desc:"Preparar acta de entrega y coordinar firma con cliente.",proyecto:"TERRAZAS DE SAN FASON T2-419",responsable:"Maria Torres",prioridad:"Alta",estado:"En progreso",vence:"2026-07-12"},
+  {id:9,titulo:"Seguimiento anticipo pendiente",desc:"Contactar cliente para confirmar pago de anticipo vencido.",proyecto:"CORNER VIEW TU-741",responsable:"Sandra Mora",prioridad:"Alta",estado:"Pendiente",vence:"2026-07-04"},
+  {id:10,titulo:"Actualizacion especificaciones cocina",desc:"Ajustar cambios de cliente en acabados de cocina.",proyecto:"TYBA TC-302",responsable:"Andres Lopez",prioridad:"Media",estado:"En progreso",vence:"2026-07-15"},
+  {id:11,titulo:"Cotizacion adicionales bano principal",desc:"Preparar cotizacion para cambio de griferia.",proyecto:"53 LIVING T3-106",responsable:"Laura Rios",prioridad:"Media",estado:"Pendiente",vence:"2026-07-09"},
+  {id:12,titulo:"Acta de inicio obra",desc:"Firmar acta de inicio con contratista.",proyecto:"TINGUAS DE CANTOVAL T1-306",responsable:"Carlos Vega",prioridad:"Alta",estado:"Completada",vence:"2026-06-28"}
+];
+var TK_VIEW="kanban",TK_EDIT=null,TK_NEXT=13;
+var nxtId=9,editId=null,sortFld=null,sortAsc=true,adminBuilt=false,dashBuilt=false,sbCol=false;
+
+// ============================== LOGIN ==============================
+function doLogin(){
+  var e=document.getElementById("inp-e").value.trim();
+  var p=document.getElementById("inp-p").value;
+  if(!e||p.length<4){showToast("Ingresa correo y contrasena validos.","er");return;}
+  var btn=document.getElementById("btn-in");
+  btn.disabled=true;
+  btn.innerHTML="<div style='width:17px;height:17px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0'></div> Verificando...";
+  setTimeout(function(){
+    document.getElementById("login").style.display="none";
+    document.getElementById("dash").style.display="block";
+    initDash();
+    btn.disabled=false;
+    btn.innerHTML="<i class='ti ti-login'></i> Ingresar a VISNET";
+  },700);
+}
+// listener de respaldo (el onclick del boton es el principal)
+window.addEventListener("load",function(){document.addEventListener("keydown",function(e){if(e.key==="Enter"){var l=document.getElementById("login");if(l&&l.style.display!=="none")doLogin();}});});
+function doLogout(){document.getElementById("dash").style.display="none";document.getElementById("login").style.display="flex";closeAllDD();}
+function toggleEye(){var i=document.getElementById("inp-p");var ic=document.getElementById("eye-i");i.type=i.type==="password""text":"password";ic.className=i.type==="password""ti ti-eye":"ti ti-eye-off";}
+
+// ============================== DASH INIT ==============================
+function initDash(){
+  if(dashBuilt)return;dashBuilt=true;
+  var h=new Date().getHours();
+  document.getElementById("wlc").textContent=(h<12"Buenos dias":h<18"Buenas tardes":"Buenas noches")+", Carolina";
+  document.getElementById("wdt").textContent=new Date().toLocaleDateString("es-CO",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  buildSBNav();buildModGrid();buildNotifs();buildAct();buildQL();
+}
+function buildSBNav(){
+  var mn=document.getElementById("sb-mods");
+  MODS.forEach(function(m){var b=document.createElement("button");b.type="button";b.className="si";b.id="nav-"+m.id;b.innerHTML="<i class='ti "+m.ic+"' aria-hidden='true'></i><span class='si-lb'>"+m.n+"</span>";b.onclick=function(){navTo(m.id);};mn.appendChild(b);});
+  var sn=document.getElementById("sb-sys");
+  SYS.forEach(function(s){var b=document.createElement("button");b.type="button";b.className="si";b.id="nav-"+s.id;var bd=s.b"<span class='si-bd'>"+s.b+"</span>":"";b.innerHTML="<i class='ti "+s.ic+"' aria-hidden='true'></i><span class='si-lb' style='flex:1'>"+s.n+"</span>"+bd;b.onclick=function(){navTo(s.id);};sn.appendChild(b);});
+}
+function toggleSB(){
+  sbCol=!sbCol;
+  var sb=document.getElementById("sb"),hdr=document.getElementById("hdr"),main=document.getElementById("main"),brand=document.getElementById("sb-brand"),ti=document.getElementById("sb-tog-i");
+  if(sbCol){sb.classList.add("col");hdr.classList.add("col");main.classList.add("col");brand.style.display="none";ti.className="ti ti-layout-sidebar-right-collapse";}
+  else{sb.classList.remove("col");hdr.classList.remove("col");main.classList.remove("col");brand.style.display="";ti.className="ti ti-layout-sidebar-left-collapse";}
+}
+function navTo(id){
+  document.querySelectorAll(".si").forEach(function(el){el.classList.remove("on");});
+  var el=document.getElementById("nav-"+id)||document.getElementById("nav-dashboard");if(el)el.classList.add("on");
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("on");});
+  if(id==="dashboard"){document.getElementById("nav-dashboard").classList.add("on");document.getElementById("pg-dashboard").classList.add("on");return;}
+  if(id==="admin"){document.getElementById("pg-admin").classList.add("on");initAdmin();return;}
+  if(id==="tareas"){document.getElementById("pg-tareas").classList.add("on");tkInit();return;}
+  if(id==="documentos"){document.getElementById("pg-documentos").classList.add("on");docInit();return;}
+  var m=MODS.find(function(x){return x.id===id;})||SYS.find(function(x){return x.id===id;});
+  if(m){document.getElementById("ph-i").className="ti "+(m.ic||"ti-tool");document.getElementById("ph-n").textContent=m.n;document.getElementById("ph-d").textContent=(m.d||m.n)+" Se conectara con Firebase y Supabase en Sprint 2.";document.getElementById("pg-module").classList.add("on");}
+  closeAllDD();document.getElementById("main").scrollTop=0;
+}
+function buildModGrid(){
+  var g=document.getElementById("mod-grid");
+  MODS.forEach(function(m){var d=document.createElement("div");d.className="mc";d.onclick=function(){navTo(m.id);};d.innerHTML="<div class='mc-top'><div class='mc-ic' style='background:"+m.c+"18;border:1.5px solid "+m.c+"28'><i class='ti "+m.ic+"' aria-hidden='true' style='color:"+m.c+";font-size:17px'></i></div><div class='ms-dev'><div class='dot'></div><span>Dev</span></div></div><div class='mc-name'>"+m.n+"</div><div class='mc-desc'>"+m.d+"</div><div class='mc-ft'><span style='color:"+m.c+"'>Abrir</span><i class='ti ti-arrow-right' aria-hidden='true' style='color:"+m.c+";font-size:11px'></i></div>";g.appendChild(d);});
+}
+function buildNotifs(){var l=document.getElementById("n-list");NOTIFS.forEach(function(n){var d=document.createElement("div");d.className="ni";d.innerHTML="<i class='ti "+n.ic+"' aria-hidden='true' style='color:"+n.c+";font-size:15px'></i><div><div class='nt'>"+n.t+"</div><div class='nm'>"+n.m+"</div><div class='ntime'>"+n.ti+"</div></div>";l.appendChild(d);});}
+function buildAct(){var l=document.getElementById("act-list");ACT.forEach(function(a){var d=document.createElement("div");d.className="ai";d.innerHTML="<div class='av' style='background:"+a.bg+"'>"+a.in+"</div><div><div class='at'><strong>"+a.u+"</strong> <em>"+a.a+"</em> "+a.t+"</div><div class='atime'>"+a.ti+"</div></div>";l.appendChild(d);});}
+function buildQL(){var l=document.getElementById("ql-list");SYS.forEach(function(s){var d=document.createElement("div");d.className="ql";d.onclick=function(){navTo(s.id);};var b=s.b"<span class='qb'>"+s.b+"</span>":"";d.innerHTML="<span class='ql-n'>"+s.n+"</span><div style='display:flex;align-items:center;gap:5px'>"+b+"<i class='ti ti-arrow-right' aria-hidden='true' style='color:#E8E8E8;font-size:12px'></i></div>";l.appendChild(d);});}
+function toggleDD(id){var d=document.getElementById(id);var open=!d.classList.contains("hidden");closeAllDD();if(!open){d.classList.remove("hidden");document.getElementById("ov").style.display="block";}}
+function closeDD(id){var el=document.getElementById(id);if(el)el.classList.add("hidden");document.getElementById("ov").style.display="none";}
+function closeAllDD(){["dd-n","dd-u"].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add("hidden");});document.getElementById("ov").style.display="none";}
+
+// ============================== ADMIN ==============================
+function initAdmin(){if(adminBuilt){filterU();updStats();return;}adminBuilt=true;buildUT(USERS);buildRGG();buildPG([]);updStats();}
+function buildUT(arr){
+  var tb=document.getElementById("u-tb");if(!tb)return;tb.innerHTML="";
+  document.getElementById("u-c").textContent=arr.length+" usuario"+(arr.length!==1"s":"");
+  if(!arr.length){tb.innerHTML="<tr><td colspan='6' style='text-align:center;padding:24px;color:#A3A3A3'>Sin resultados.</td></tr>";return;}
+  arr.forEach(function(u){
+    var rc=RC[u.r]||{bg:"#f4f4f5",co:"#737373",br:"#e8e8e8"};
+    var sm={act:["Activo","act"],pnd:["Pendiente","pnd"],ina:["Inactivo","ina"]}[u.s]||["Inactivo","ina"];
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td><div class='u-cell'><div class='u-av' style='background:"+u.c+"'>"+u.i+"</div><div><div class='u-name'>"+u.n+"</div><div class='u-email'>"+u.e+"</div></div></div></td><td><span class='rbadge' style='background:"+rc.bg+";color:"+rc.co+";border:1px solid "+rc.br+"'>"+u.r+"</span></td><td style='color:#737373;font-size:11px'>"+u.d+"</td><td><span class='sbadge "+sm[1]+"'><span class='dot'></span>"+sm[0]+"</span></td><td style='color:#A3A3A3;font-size:11px'>"+u.l+"</td><td><div class='acts'></div></td>";
+    var acts=tr.querySelector(".acts");
+    var be=document.createElement("button");be.type="button";be.className="ab e";be.title="Editar";be.innerHTML="<i class='ti ti-pencil' aria-hidden='true'></i>";be.onclick=(function(uid){return function(){editU(uid);};})(u.id);
+    var br=document.createElement("button");br.type="button";br.className="ab r";br.title="Reset";br.innerHTML="<i class='ti ti-key' aria-hidden='true'></i>";br.onclick=(function(uid){return function(){resetPw(uid);};})(u.id);
+    var bt=document.createElement("button");bt.type="button";bt.className="ab t";bt.title=u.s==="act""Desactivar":"Activar";bt.innerHTML="<i class='ti ti-toggle-"+(u.s==="act""right":"left")+"' aria-hidden='true'></i>";bt.onclick=(function(uid){return function(){togU(uid);};})(u.id);
+    acts.appendChild(be);acts.appendChild(br);acts.appendChild(bt);
+    if(u.id!==1){var bd=document.createElement("button");bd.type="button";bd.className="ab d";bd.title="Eliminar";bd.innerHTML="<i class='ti ti-trash' aria-hidden='true'></i>";bd.onclick=(function(uid){return function(){delU(uid);};})(u.id);acts.appendChild(bd);}
+    tb.appendChild(tr);
+  });
+}
+function filterU(){var q=(document.getElementById("u-s").value||"").toLowerCase(),r=document.getElementById("u-r").value,s=document.getElementById("u-st").value;buildUT(USERS.filter(function(u){return(!q||u.n.toLowerCase().includes(q)||u.e.toLowerCase().includes(q))&&(!r||u.r===r)&&(!s||u.s===s);}));}
+function sortU(f){if(sortFld===f)sortAsc=!sortAsc;else{sortFld=f;sortAsc=true;}USERS.sort(function(a,b){var va=a[f]||"",vb=b[f]||"";return sortAscva.localeCompare(vb):vb.localeCompare(va);});filterU();}
+function updStats(){document.getElementById("st-t").textContent=USERS.length;document.getElementById("st-a").textContent=USERS.filter(function(u){return u.s==="act";}).length;document.getElementById("st-p").textContent=USERS.filter(function(u){return u.s==="pnd";}).length;}
+function buildRGG(){var g=document.getElementById("rg-g");if(!g)return;g.innerHTML="";RG.forEach(function(r){var rc=RC[r.n]||{bg:"#f4f4f5",co:"#737373",br:"#e8e8e8"};var d=document.createElement("div");d.className="rgc";d.innerHTML="<div class='rgc-b' style='background:"+rc.bg+";color:"+rc.co+";border:1px solid "+rc.br+"'>"+r.b+"</div><div class='rgc-n'>"+r.n+"</div><div class='rgc-d'>"+r.d+"</div>";g.appendChild(d);});}
+function toggleRG(){var b=document.getElementById("rg-b"),ch=document.getElementById("rg-ch");var open=b.style.display!=="none";b.style.display=open"none":"block";ch.style.transform=open"":"rotate(180deg)";}
+function buildPG(p){var g=document.getElementById("pg-g");if(!g)return;g.innerHTML="";AP.forEach(function(a){var ck=p.includes(a.id);var d=document.createElement("div");d.className="pi"+(ck" ck":"");d.id="pi-"+a.id;d.onclick=function(){togP(a.id);};d.innerHTML="<div class='pch'>"+(ck"<i class='ti ti-check' aria-hidden='true'></i>":"")+"</div><span class='pl'>"+a.l+"</span>";g.appendChild(d);});}
+function togP(id){var el=document.getElementById("pi-"+id);el.classList.toggle("ck");var ch=el.querySelector(".pch");ch.innerHTML=el.classList.contains("ck")"<i class='ti ti-check' aria-hidden='true'></i>":"";}
+function updPerms(){buildPG(RP[document.getElementById("f-r").value]||[]);}
+function editU(uid){openMo("edit",uid);}
+function openMo(mode,uid){
+  editId=null;["f-n","f-j","f-e","f-ph"].forEach(function(id){document.getElementById(id).value="";});
+  document.getElementById("f-r").value="";document.getElementById("f-d").value="";buildPG([]);
+  if(mode==="edit"&&uid){var u=USERS.find(function(x){return x.id===uid;});if(!u)return;editId=uid;document.getElementById("mo-t").textContent="Editar usuario";document.getElementById("f-n").value=u.n;document.getElementById("f-e").value=u.e;document.getElementById("f-j").value=u.j||"";document.getElementById("f-ph").value=u.p||"";document.getElementById("f-r").value=u.r;document.getElementById("f-d").value=u.d;buildPG(RP[u.r]||[]);}
+  else document.getElementById("mo-t").textContent="Nuevo usuario";
+  openModal("mo-u");
+}
+function saveU(){
+  var n=document.getElementById("f-n").value.trim(),e=document.getElementById("f-e").value.trim(),r=document.getElementById("f-r").value,d=document.getElementById("f-d").value,j=document.getElementById("f-j").value.trim(),p=document.getElementById("f-ph").value.trim();
+  if(!n||!e||!r){showToast("Completa nombre, correo y rol.","er");return;}
+  var ini=n.split(" ").slice(0,2).map(function(x){return x[0];}).join("").toUpperCase();
+  var co=(RC[r]||{co:"#737373"}).co;
+  if(editId){var idx=USERS.findIndex(function(u){return u.id===editId;});if(idx>=0)USERS[idx]=Object.assign(USERS[idx],{n:n,e:e,r:r,d:d||USERS[idx].d,j:j,p:p,i:ini,c:co});showToast("Usuario actualizado.","ok");}
+  else{USERS.push({id:nxtId++,n:n,e:e,r:r,d:d||"Sin asignar",s:"pnd",l:"Nunca",j:j,p:p,i:ini,c:co});showToast("Usuario creado.","ok");}
+  updStats();filterU();closeMo("mo-u");
+}
+function togU(id){var u=USERS.find(function(x){return x.id===id;});if(!u)return;document.getElementById("mo-ct").textContent=(u.s==="act""Desactivar":"Activar")+" usuario";document.getElementById("mo-cm").textContent="Deseas "+(u.s==="act""desactivar":"activar")+" la cuenta de "+u.n+"";document.getElementById("mo-cb").onclick=function(){u.s=u.s==="act""ina":"act";updStats();filterU();closeMo("mo-c");showToast("Listo.","ok");};openModal("mo-c");}
+function delU(id){var u=USERS.find(function(x){return x.id===id;});if(!u)return;document.getElementById("mo-ct").textContent="Eliminar usuario";document.getElementById("mo-cm").textContent="Deseas eliminar a "+u.n+" Esta accion no se puede deshacer.";document.getElementById("mo-cb").style.background="#ef4444";document.getElementById("mo-cb").onclick=function(){USERS=USERS.filter(function(x){return x.id!==id;});updStats();filterU();closeMo("mo-c");showToast("Eliminado.","wn");document.getElementById("mo-cb").style.background="";};openModal("mo-c");}
+function resetPw(id){var u=USERS.find(function(x){return x.id===id;});if(u)showToast("Correo enviado a "+u.e,"ok");}
+
+// ============================== TAREAS ==============================
+function tkInit(){
+  var sp=document.getElementById("tk-fp");
+  if(!sp||sp.options.length>1)return;
+  TK_PROYECTOS.forEach(function(p){var o=document.createElement("option");o.value=p;o.textContent=p;sp.appendChild(o);});
+  var sr=document.getElementById("tk-fr");
+  TK_EQUIPO.forEach(function(e){var o=document.createElement("option");o.value=e.n;o.textContent=e.n;sr.appendChild(o);});
+  var sp2=document.getElementById("tk-f-proy");
+  TK_PROYECTOS.forEach(function(p){var o=document.createElement("option");o.value=p;o.textContent=p;sp2.appendChild(o);});
+  var sr2=document.getElementById("tk-f-resp");
+  TK_EQUIPO.forEach(function(e){var o=document.createElement("option");o.value=e.n;o.textContent=e.n;sr2.appendChild(o);});
+  tkRender();
+}
+function tkFiltered(){var q=(document.getElementById("tk-q")||{}).value||"";q=q.toLowerCase();var fp=(document.getElementById("tk-fp")||{}).value||"";var fpr=(document.getElementById("tk-fpr")||{}).value||"";var fr=(document.getElementById("tk-fr")||{}).value||"";return TK_TASKS.filter(function(t){return(!q||t.titulo.toLowerCase().includes(q)||t.proyecto.toLowerCase().includes(q))&&(!fp||t.proyecto===fp)&&(!fpr||t.prioridad===fpr)&&(!fr||t.responsable===fr);});}
+function tkUpdStats(){var f=tkFiltered();function s(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}s("tk-st-t",f.length);s("tk-st-p",f.filter(function(t){return t.estado==="Pendiente";}).length);s("tk-st-i",f.filter(function(t){return t.estado==="En progreso";}).length);s("tk-st-d",f.filter(function(t){return t.estado==="Completada";}).length);}
+function tkSetView(v){TK_VIEW=v;var k=document.getElementById("vt-k"),l=document.getElementById("vt-l");if(k)k.classList.toggle("on",v==="kanban");if(l)l.classList.toggle("on",v==="lista");tkRender();}
+function tkFmt(d){if(!d)return"";var p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0];}
+function tkVenc(d,e){return d&&new Date(d)<new Date()&&e!=="Completada";}
+function tkPrCls(p){return p==="Alta""pr-alta":p==="Media""pr-media":"pr-baja";}
+function tkStCls(s){return s==="Pendiente""tk-st-pend":s==="En progreso""tk-st-prog":"tk-st-done";}
+function tkEq(name){return TK_EQUIPO.find(function(e){return e.n===name;})||{n:name,i:(name||"").split(" ").slice(0,2).map(function(x){return x[0];}).join("").toUpperCase(),c:"#737373"};}
+function tkCardHTML(t){var eq=tkEq(t.responsable);var vn=tkVenc(t.vence,t.estado);return"<div class='tk-card' onclick='tkEditTask("+t.id+")'><div class='tk-card-top'><span class='tk-title'>"+t.titulo+"</span><span class='prbadge "+tkPrCls(t.prioridad)+"'>"+t.prioridad+"</span></div><div class='tk-proj'><i class='ti ti-building' aria-hidden='true'></i>"+t.proyecto+"</div><div class='tk-foot'><div class='tk-resp'><div class='tk-av' style='background:"+eq.c+"'>"+eq.i+"</div>"+eq.n.split(" ")[0]+"</div>"+(t.vence"<div class='tk-date"+(vn" vence":"")+"'><i class='ti ti-calendar' aria-hidden='true'></i>"+tkFmt(t.vence)+"</div>":"")+"</div></div>";}
+function tkRender(){
+  var va=document.getElementById("tk-view");if(!va)return;
+  var f=tkFiltered();tkUpdStats();
+  if(TK_VIEW==="kanban"){
+    var cols=["Pendiente","En progreso","Completada"],cls=["kb-pend","kb-prog","kb-done"],html="<div class='kanban'>";
+    cols.forEach(function(col,i){var ts=f.filter(function(t){return t.estado===col;});html+="<div class='"+cls[i]+"'><div class='kb-col-hd'><div class='kb-col-title'><span class='kb-dot'></span>"+col+"<span class='kb-ct'>"+ts.length+"</span></div></div>";html+=ts.length"":("<div class='tk-empty'><i class='ti ti-inbox' aria-hidden='true'></i>Sin tareas</div>");ts.forEach(function(t){html+=tkCardHTML(t);});html+="</div>";});
+    va.innerHTML=html+"</div>";
+  } else {
+    if(!f.length){va.innerHTML="<div class='tk-empty'><i class='ti ti-clipboard-x' aria-hidden='true'></i>Sin tareas.</div>";return;}
+    var html="<div class='tk-list-wrap'><div class='tk-list-hdr'><span>Tarea</span><span>Proyecto</span><span>Responsable</span><span>Prioridad</span><span>Estado</span><span style='text-align:right'>Acc.</span></div>";
+    f.forEach(function(t){var eq=tkEq(t.responsable);var vn=tkVenc(t.vence,t.estado);html+="<div class='tk-list-row' onclick='tkEditTask("+t.id+")'><span style='display:flex;flex-direction:column;gap:1px'><span style='font-weight:700;font-size:12px'>"+t.titulo+"</span>"+(t.vence"<span style='font-size:10px;color:"+(vn"#dc2626":"#A3A3A3")+"'>"+tkFmt(t.vence)+"</span>":"")+"</span><span style='font-size:11px;color:#737373'>"+t.proyecto+"</span><span style='display:flex;align-items:center;gap:5px'><div style='width:20px;height:20px;border-radius:50%;background:"+eq.c+";display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:700;flex-shrink:0'>"+eq.i+"</div><span style='font-size:11px'>"+eq.n.split(" ")[0]+"</span></span><span><span class='prbadge "+tkPrCls(t.prioridad)+"'>"+t.prioridad+"</span></span><span><span class='tk-stbadge "+tkStCls(t.estado)+"'><span class='dot'></span>"+t.estado+"</span></span><span style='text-align:right'><div style='display:flex;align-items:center;gap:2px;justify-content:flex-end' onclick='event.stopPropagation()'><button class='ab e' type='button' onclick='tkEditTask("+t.id+")'><i class='ti ti-pencil' aria-hidden='true'></i></button><button class='ab d' type='button' onclick='tkDelTask("+t.id+")'><i class='ti ti-trash' aria-hidden='true'></i></button></div></span></div>";});
+    va.innerHTML=html+"</div>";
+  }
+}
+function tkOpenMo(tid){
+  TK_EDIT=tid||null;
+  var t=tidTK_TASKS.find(function(x){return x.id===tid;}):null;
+  document.getElementById("tk-mo-t").textContent=tid"Editar tarea":"Nueva tarea";
+  document.getElementById("tk-f-tit").value=tt.titulo:"";
+  document.getElementById("tk-f-desc").value=tt.desc:"";
+  document.getElementById("tk-f-proy").value=tt.proyecto:"";
+  document.getElementById("tk-f-resp").value=tt.responsable:"";
+  document.getElementById("tk-f-prio").value=tt.prioridad:"Media";
+  document.getElementById("tk-f-est").value=tt.estado:"Pendiente";
+  document.getElementById("tk-f-vence").value=tt.vence:"";
+  openModal("mo-tk");
+}
+function tkCloseMo(){closeMo("mo-tk");}
+function tkEditTask(id){tkOpenMo(id);}
+function tkSave(){
+  var g=function(id){return(document.getElementById(id)||{}).value||"";};
+  var tit=g("tk-f-tit").trim(),proy=g("tk-f-proy"),resp=g("tk-f-resp");
+  if(!tit||!proy||!resp){showToast("Completa titulo, proyecto y responsable.","er");return;}
+  var data={titulo:tit,desc:g("tk-f-desc").trim(),proyecto:proy,responsable:resp,prioridad:g("tk-f-prio"),estado:g("tk-f-est"),vence:g("tk-f-vence")};
+  if(TK_EDIT){var idx=TK_TASKS.findIndex(function(t){return t.id===TK_EDIT;});if(idx>=0)TK_TASKS[idx]=Object.assign(TK_TASKS[idx],data);showToast("Tarea actualizada.","ok");}
+  else{data.id=TK_NEXT++;TK_TASKS.push(data);showToast("Tarea creada.","ok");}
+  tkCloseMo();tkRender();
+}
+function tkDelTask(id){document.getElementById("mo-ct").textContent="Eliminar tarea";document.getElementById("mo-cm").textContent="Deseas eliminar esta tarea";document.getElementById("mo-cb").style.background="#ef4444";document.getElementById("mo-cb").onclick=function(){TK_TASKS=TK_TASKS.filter(function(t){return t.id!==id;});tkRender();closeMo("mo-c");showToast("Tarea eliminada.","wn");document.getElementById("mo-cb").style.background="";};openModal("mo-c");}
+
+// ============================== MODALES ==============================
+function openModal(id){var m=document.getElementById(id);if(m){m.classList.remove("hidden");m.classList.add("open");}}
+function closeMo(id){var m=document.getElementById(id);if(m){m.classList.add("hidden");m.classList.remove("open");}}
+
+// ============================== TOAST ==============================
+function showToast(msg,type){var w=document.getElementById("toast-cnt");var d=document.createElement("div");d.className="toast "+(type||"ok");var ic={ok:"ti-circle-check",wn:"ti-alert-triangle",er:"ti-circle-x"}[type]||"ti-info-circle";var cl={ok:"#22c55e",wn:"#f59e0b",er:"#ef4444"}[type]||"#3b82f6";d.innerHTML="<i class='ti "+ic+"' aria-hidden='true' style='font-size:14px;color:"+cl+"'></i>"+msg;w.appendChild(d);setTimeout(function(){if(d.parentNode)d.remove();},3000);}
+
+/* ================================================================
+   CENTRO DOCUMENTAL
+   ================================================================ */
+var DOC_PROYECTOS_LIST = [
+  "WELL T1-718","SENDEROS DE FONTIBON T3-411","NOVO CANDELARIA T12-506",
+  "LOIRA LA SALLE T1-1207","NATIVO LIVING TU-304","PORTO 13 T1-905",
+  "TERRAZAS DE SAN FASON T2-419","CANELO T2-203","BUENAVISTA LIVING T3-1705",
+  "PORTO 13 T1-303","TYBA TC-302","BELLALUNA T2-407"
+];
+
+var DOC_TIPOS = {
+  "Contrato":   {cls:"tag-contrato",  ic:"ti-file-check",    c:"#9a3412", bg:"rgba(234,88,12,.10)"},
+  "Plano":      {cls:"tag-plano",     ic:"ti-ruler-2",       c:"#1d4ed8", bg:"rgba(29,78,216,.10)"},
+  "Cotizacion": {cls:"tag-cotizacion",ic:"ti-file-dollar",   c:"#15803d", bg:"rgba(21,128,61,.10)"},
+  "Acta":       {cls:"tag-acta",      ic:"ti-clipboard-text",c:"#7e22ce", bg:"rgba(126,34,206,.10)"},
+  "Proveedor":  {cls:"tag-proveedor", ic:"ti-truck",         c:"#b45309", bg:"rgba(180,83,9,.10)"},
+  "Factura":    {cls:"tag-factura",   ic:"ti-receipt",       c:"#991b1b", bg:"rgba(153,27,27,.10)"},
+  "RRHH":       {cls:"tag-rrhh",      ic:"ti-user-heart",    c:"#0369a1", bg:"rgba(3,105,161,.10)"}
+};
+
+var DOC_DOCS = [
+  {id:1, nombre:"Contrato AcabadosVIS  -  WELL T1-718", tipo:"Contrato", proyecto:"WELL T1-718", autor:"Carolina Chacon", fecha:"2026-06-10", acceso:"Todos", ver:"v2.0", size:"1.2 MB"},
+  {id:2, nombre:"Planos arquitectonicos  -  CANELO T2-203", tipo:"Plano", proyecto:"CANELO T2-203", autor:"Maria Torres", fecha:"2026-06-15", acceso:"Operaciones y Proyectos", ver:"v1.3", size:"4.8 MB"},
+  {id:3, nombre:"Cotizacion aprobada  -  PORTO 13 T1-905", tipo:"Cotizacion", proyecto:"PORTO 13 T1-905", autor:"Juan Perez", fecha:"2026-06-18", acceso:"Todos", ver:"v1.0", size:"0.8 MB"},
+  {id:4, nombre:"Acta de inicio obra  -  BUENAVISTA LIVING T3-1705", tipo:"Acta", proyecto:"BUENAVISTA LIVING T3-1705", autor:"Maria Torres", fecha:"2026-06-20", acceso:"Todos", ver:"v1.0", size:"0.5 MB"},
+  {id:5, nombre:"Contrato proveedor ceramica  -  NOVO CANDELARIA T12-506", tipo:"Proveedor", proyecto:"NOVO CANDELARIA T12-506", autor:"Laura Rios", fecha:"2026-06-22", acceso:"Solo Administradores", ver:"v1.0", size:"2.1 MB"},
+  {id:6, nombre:"Factura instalacion carpinteria  -  SENDEROS T3-411", tipo:"Factura", proyecto:"SENDEROS DE FONTIBON T3-411", autor:"Sandra Mora", fecha:"2026-06-25", acceso:"Solo Administradores", ver:"v1.0", size:"0.3 MB"},
+  {id:7, nombre:"Especificaciones tecnicas acabados  -  LOIRA T1-1207", tipo:"Plano", proyecto:"LOIRA LA SALLE T1-1207", autor:"Maria Torres", fecha:"2026-06-26", acceso:"Operaciones y Proyectos", ver:"v2.1", size:"6.2 MB"},
+  {id:8, nombre:"Acta de entrega  -  TYBA TC-302", tipo:"Acta", proyecto:"TYBA TC-302", autor:"Carolina Chacon", fecha:"2026-06-28", acceso:"Todos", ver:"v1.0", size:"0.4 MB"},
+  {id:9, nombre:"Contrato remodelacion  -  TERRAZAS T2-419", tipo:"Contrato", proyecto:"TERRAZAS DE SAN FASON T2-419", autor:"Laura Rios", fecha:"2026-06-29", acceso:"Todos", ver:"v1.0", size:"1.5 MB"},
+  {id:10, nombre:"Cotizacion adicionales cocina  -  PORTO 13 T1-303", tipo:"Cotizacion", proyecto:"PORTO 13 T1-303", autor:"Juan Perez", fecha:"2026-07-01", acceso:"Comercial", ver:"v1.0", size:"0.6 MB"},
+  {id:11, nombre:"Contrato RRHH  -  Andres Lopez", tipo:"RRHH", proyecto:"", autor:"Carolina Chacon", fecha:"2026-07-01", acceso:"Solo Direccion General", ver:"v1.0", size:"0.9 MB"},
+  {id:12, nombre:"Planos electricos  -  BELLALUNA T2-407", tipo:"Plano", proyecto:"BELLALUNA T2-407", autor:"Maria Torres", fecha:"2026-07-02", acceso:"Operaciones y Proyectos", ver:"v1.0", size:"3.4 MB"}
+];
+
+var DOC_FOLDER = null;
+var DOC_NEXT = 13;
+var docBuilt = false;
+
+function docInit(){
+  if(docBuilt) return;
+  docBuilt = true;
+
+  // Poblar selector de proyectos en modal
+  var sp = document.getElementById('doc-f-proy');
+  if(sp){
+    DOC_PROYECTOS_LIST.forEach(function(p){
+      var o = document.createElement('option'); o.value = p; o.textContent = p; sp.appendChild(o);
+    });
+  }
+
+  // Construir arbol de carpetas
+  docBuildTree();
+  docRender();
+}
+
+function docBuildTree(){
+  var fl = document.getElementById('doc-folder-list'); if(!fl) return;
+  fl.innerHTML = '';
+
+  // Carpeta "Todos"
+  var all = document.createElement('div'); all.className = 'doc-folder';
+  all.innerHTML = '<div class="doc-folder-hd active" id="df-all" onclick="docSetFolder(null)">'
+    + '<i class="ti ti-folders df-folder-ic" aria-hidden="true" style="color:#f56e1d"></i>'
+    + '<span class="df-name">Todos los documentos</span>'
+    + '<span class="df-ct">' + DOC_DOCS.length + '</span>'
+    + '</div>';
+  fl.appendChild(all);
+
+  // Carpetas por tipo
+  var tipos = Object.keys(DOC_TIPOS);
+  tipos.forEach(function(tipo){
+    var count = DOC_DOCS.filter(function(d){ return d.tipo === tipo; }).length;
+    if(!count) return;
+    var t = DOC_TIPOS[tipo];
+    var div = document.createElement('div'); div.className = 'doc-folder';
+    div.innerHTML = '<div class="doc-folder-hd" id="df-' + tipo + '" onclick="docSetFolder('' + tipo + '')">'
+      + '<i class="ti ' + t.ic + ' df-folder-ic" aria-hidden="true" style="color:' + t.c + '"></i>'
+      + '<span class="df-name">' + tipo + 's</span>'
+      + '<span class="df-ct">' + count + '</span>'
+      + '</div>';
+    fl.appendChild(div);
+  });
+}
+
+function docSetFolder(tipo){
+  DOC_FOLDER = tipo;
+  // Actualizar estilos carpetas
+  document.querySelectorAll('.doc-folder-hd').forEach(function(el){ el.classList.remove('active'); });
+  var target = document.getElementById(tipo  'df-' + tipo : 'df-all');
+  if(target) target.classList.add('active');
+  // Actualizar path
+  var path = document.getElementById('doc-path');
+  if(path){
+    if(tipo){
+      var t = DOC_TIPOS[tipo];
+      path.innerHTML = '<i class="ti ' + t.ic + '" aria-hidden="true" style="color:' + t.c + '"></i><i class="ti ti-chevron-right" aria-hidden="true" style="color:#A3A3A3;font-size:11px"></i><span>' + tipo + 's</span>';
+    } else {
+      path.innerHTML = '<i class="ti ti-folders" aria-hidden="true" style="color:#f56e1d"></i><span>Todos los documentos</span>';
+    }
+  }
+  docRender();
+}
+
+function docFiltered(){
+  var q = (document.getElementById('doc-q')||{}).value || ''; q = q.toLowerCase();
+  var ft = (document.getElementById('doc-ftipo')||{}).value || '';
+  return DOC_DOCS.filter(function(d){
+    return (!q || d.nombre.toLowerCase().includes(q) || d.proyecto.toLowerCase().includes(q))
+      && (!DOC_FOLDER || d.tipo === DOC_FOLDER)
+      && (!ft || d.tipo === ft);
+  });
+}
+
+function docFmtDate(d){
+  if(!d) return '';
+  var p = d.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+function docUpdStats(){
+  var all = DOC_DOCS;
+  var el = function(id){ return document.getElementById(id); };
+  if(el('ds-total')) el('ds-total').textContent = all.length;
+  if(el('ds-contratos')) el('ds-contratos').textContent = all.filter(function(d){ return d.tipo==='Contrato'; }).length;
+  if(el('ds-actas')) el('ds-actas').textContent = all.filter(function(d){ return d.tipo==='Acta'; }).length;
+  if(el('ds-planos')) el('ds-planos').textContent = all.filter(function(d){ return d.tipo==='Plano'; }).length;
+}
+
+function docRender(){
+  var rows = document.getElementById('doc-rows'); if(!rows) return;
+  var f = docFiltered();
+  var ct = document.getElementById('doc-count');
+  if(ct) ct.textContent = f.length + ' documento' + (f.length !== 1  's' : '');
+  docUpdStats();
+
+  if(!f.length){
+    rows.innerHTML = '<div class="doc-empty"><i class="ti ti-folder-off" aria-hidden="true"></i><p>No hay documentos en esta carpeta.</p></div>';
+    return;
+  }
+
+  var html = '';
+  f.forEach(function(d){
+    var t = DOC_TIPOS[d.tipo] || {cls:'',ic:'ti-file',c:'#737373',bg:'rgba(0,0,0,.05)'};
+    var eq = TK_EQUIPO.find(function(e){ return e.n === d.autor; }) || {i: d.autor.split(' ').slice(0,2).map(function(x){return x[0];}).join('').toUpperCase(), c:'#737373'};
+    html += '<div class="doc-row" onclick="docPreview(' + d.id + ')">'
+      + '<span><div class="doc-file-cell">'
+      + '<div class="doc-file-ic" style="background:' + t.bg + '"><i class="ti ' + t.ic + '" aria-hidden="true" style="color:' + t.c + '"></i></div>'
+      + '<div><div class="doc-file-name">' + d.nombre + '</div>'
+      + (d.proyecto  '<div class="doc-file-proj"><i class="ti ti-building" aria-hidden="true" style="font-size:10px"></i> ' + d.proyecto + '</div>' : '')
+      + '</div></div></span>'
+      + '<span><span class="tag-badge ' + t.cls + '">' + d.tipo + '</span></span>'
+      + '<span style="display:flex;align-items:center;gap:5px">'
+      + '<div style="width:20px;height:20px;border-radius:50%;background:' + eq.c + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:700;flex-shrink:0">' + eq.i + '</div>'
+      + '<span style="font-size:11px;color:#737373">' + d.autor.split(' ')[0] + '</span></span>'
+      + '<span class="muted">' + docFmtDate(d.fecha) + '</span>'
+      + '<span><div class="doc-act-btns" onclick="event.stopPropagation()">'
+      + '<button class="ab e" type="button" title="Ver" onclick="docPreview(' + d.id + ')"><i class="ti ti-eye" aria-hidden="true"></i></button>'
+      + '<button class="ab t" type="button" title="Descargar" onclick="docDownload(' + d.id + ')"><i class="ti ti-download" aria-hidden="true"></i></button>'
+      + '<button class="ab d" type="button" title="Eliminar" onclick="docDel(' + d.id + ')"><i class="ti ti-trash" aria-hidden="true"></i></button>'
+      + '</div></span>'
+      + '</div>';
+  });
+  rows.innerHTML = html;
+}
+
+function docPreview(id){
+  var d = DOC_DOCS.find(function(x){ return x.id === id; }); if(!d) return;
+  var t = DOC_TIPOS[d.tipo] || {ic:'ti-file',c:'#737373',bg:'rgba(0,0,0,.05)'};
+  document.getElementById('mo-ct').textContent = 'Detalle del documento';
+  document.getElementById('mo-cm').innerHTML =
+    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #F2F2F2">'
+    + '<div style="width:44px;height:44px;border-radius:10px;background:' + t.bg + ';display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ' + t.ic + '" style="font-size:20px;color:' + t.c + '" aria-hidden="true"></i></div>'
+    + '<div><div style="font-size:14px;font-weight:700;color:#0D0D0D">' + d.nombre + '</div>'
+    + (d.proyecto  '<div style="font-size:11px;color:#737373;margin-top:2px"><i class="ti ti-building" aria-hidden="true" style="font-size:11px"></i> ' + d.proyecto + '</div>' : '')
+    + '</div></div>'
+    + '<table style="width:100%;font-size:12px;border-collapse:collapse">'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0;width:120px">Tipo</td><td style="color:#0D0D0D;font-weight:500">' + d.tipo + '</td></tr>'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0">Version</td><td style="color:#0D0D0D;font-weight:500">' + d.ver + '</td></tr>'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0">Subido por</td><td style="color:#0D0D0D;font-weight:500">' + d.autor + '</td></tr>'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0">Fecha</td><td style="color:#0D0D0D;font-weight:500">' + docFmtDate(d.fecha) + '</td></tr>'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0">Tamano</td><td style="color:#0D0D0D;font-weight:500">' + d.size + '</td></tr>'
+    + '<tr><td style="color:#A3A3A3;padding:5px 0">Acceso</td><td><span style="background:#fff8f4;color:#f56e1d;border:1px solid #ffe0cc;border-radius:99px;padding:2px 8px;font-size:10px;font-weight:600">' + d.acceso + '</span></td></tr>'
+    + '</table>';
+  document.getElementById('mo-cb').textContent = 'Descargar';
+  document.getElementById('mo-cb').style.background = '';
+  document.getElementById('mo-cb').onclick = function(){ closeMo('mo-c'); showToast('Descargando ' + d.nombre + '...', 'ok'); };
+  openModal('mo-c');
+}
+
+function docDownload(id){
+  var d = DOC_DOCS.find(function(x){ return x.id === id; }); if(!d) return;
+  showToast('Descargando ' + d.nombre + '...', 'ok');
+}
+
+function docDel(id){
+  var d = DOC_DOCS.find(function(x){ return x.id === id; }); if(!d) return;
+  document.getElementById('mo-ct').textContent = 'Eliminar documento';
+  document.getElementById('mo-cm').textContent = 'Deseas eliminar "' + d.nombre + '" Esta accion no se puede deshacer.';
+  document.getElementById('mo-cb').style.background = '#ef4444';
+  document.getElementById('mo-cb').onclick = function(){
+    DOC_DOCS = DOC_DOCS.filter(function(x){ return x.id !== id; });
+    docBuildTree(); docRender(); closeMo('mo-c');
+    showToast('Documento eliminado.', 'wn');
+    document.getElementById('mo-cb').style.background = '';
+  };
+  openModal('mo-c');
+}
+
+function docFileSelected(inp){
+  var fn = document.getElementById('doc-file-name');
+  if(inp.files && inp.files[0]){
+    fn.textContent = inp.files[0].name + ' (' + (inp.files[0].size/1024/1024).toFixed(1) + ' MB)';
+    fn.style.display = 'block';
+  }
+}
+
+function docOpenMo(){
+  document.getElementById('doc-f-tipo').value = '';
+  document.getElementById('doc-f-proy').value = '';
+  document.getElementById('doc-f-desc').value = '';
+  document.getElementById('doc-f-acceso').value = 'Todos';
+  document.getElementById('doc-f-ver').value = 'v1.0';
+  var fn = document.getElementById('doc-file-name');
+  if(fn){ fn.style.display='none'; fn.textContent=''; }
+  openModal('mo-doc');
+}
+function docCloseMo(){ closeMo('mo-doc'); }
+
+function docSave(){
+  var tipo = document.getElementById('doc-f-tipo').value;
+  var proy = document.getElementById('doc-f-proy').value;
+  var desc = document.getElementById('doc-f-desc').value.trim();
+  var fileEl = document.getElementById('doc-file-inp');
+  var hasFile = fileEl && fileEl.files && fileEl.files[0];
+  if(!tipo){ showToast('Selecciona el tipo de documento.', 'er'); return; }
+  if(!desc && !hasFile){ showToast('Agrega una descripcion o selecciona un archivo.', 'er'); return; }
+  var nombre = desc || (hasFile  fileEl.files[0].name : 'Documento sin nombre');
+  var size = hasFile  (fileEl.files[0].size/1024/1024).toFixed(1) + ' MB' : ' - ';
+  var today = new Date().toISOString().slice(0,10);
+  DOC_DOCS.unshift({
+    id: DOC_NEXT++,
+    nombre: nombre,
+    tipo: tipo,
+    proyecto: proy,
+    autor: 'Carolina Chacon',
+    fecha: today,
+    acceso: document.getElementById('doc-f-acceso').value,
+    ver: document.getElementById('doc-f-ver').value || 'v1.0',
+    size: size
+  });
+  docBuildTree(); docRender(); docCloseMo();
+  showToast('Documento subido correctamente.', 'ok');
+}
+
+</script>
+</body>
+</html>
